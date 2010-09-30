@@ -22,6 +22,7 @@ AC_PROG_CC_C99
 
 # Checks for library functions.
 
+AC_CONFIG_SRCDIR([src/eh.h])
 AC_CONFIG_FILES([Makefile
 		 doc/Makefile
 		 src/Makefile])
