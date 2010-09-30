@@ -4,3 +4,5 @@ SUBDIRS = src doc
 
 pkgconfigdir = $(datadir)/pkgconfig
 pkgconfig_DATA = eh.pc
+
+EXTRA_DIST = LICENSE
