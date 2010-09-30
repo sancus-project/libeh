@@ -19,6 +19,8 @@ AC_PROG_CC_C99
 # Checks for header files.
 
 # Checks for typedefs, structures, and compiler characteristics.
+CWARNFLAGS="-Wall -Wextra -pedantic"
+AC_SUBST(CWARNFLAGS)
 
 # Checks for library functions.
 
