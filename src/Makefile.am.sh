@@ -1,7 +1,7 @@
 #!/bin/sh
 
 list() {
-	ls -1 "$@" | sort | tr '\n' ' ' |
+	ls -1 "$@" | sort -V | tr '\n' ' ' |
 		sed -e 's,^ *,,' -e 's, *$,,'
 }
 
