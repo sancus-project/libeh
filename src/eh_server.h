@@ -34,9 +34,6 @@
 
 struct eh_server {
 	int fd;
-
-	socklen_t addrlen;
-	struct sockaddr_storage addr;
 };
 
 int eh_server_ipv4_tcp(struct eh_server *self, const char *addr, unsigned port);

@@ -39,14 +39,9 @@
 #include <unistd.h>
 
 /* 1:ok, 0:bad address, -1:errno */
-static int init_ipv4(struct eh_server *self, const char *addr, unsigned port)
+static int init_ipv4(struct sockaddr_in *sin, const char *addr, unsigned port)
 {
-	struct sockaddr_in *sin = (struct sockaddr_in *)&self->addr;
 	int e = 1;
-
-	memset(self, '\0', sizeof(*self));
-	self->addrlen = sizeof(*sin);
-	self->fd = -1;
 
 	sin->sin_family = AF_INET;
 	sin->sin_port = htons(port);
@@ -61,9 +56,9 @@ static int init_ipv4(struct eh_server *self, const char *addr, unsigned port)
 }
 
 /* <0 error, >=0 fd */
-static int init_tcp(struct eh_server *self)
+static int init_tcp(int family)
 {
-	int fd = socket(self->addr.ss_family, SOCK_STREAM, 0);
+	int fd = socket(family, SOCK_STREAM, 0);
 
 	if (fd < 0)
 		return -1;
@@ -71,7 +66,6 @@ static int init_tcp(struct eh_server *self)
 		int flags = 1;
 		struct linger ling = {0, 0}; /* disabled */
 
-		self->fd = fd;
 		setsockopt(fd, SOL_SOCKET, SO_REUSEADDR, (void *)&flags, sizeof(flags));
 		setsockopt(fd, SOL_SOCKET, SO_KEEPALIVE, (void *)&flags, sizeof(flags));
 		setsockopt(fd, SOL_SOCKET, SO_LINGER, (void *)&ling, sizeof(ling));
@@ -79,15 +73,18 @@ static int init_tcp(struct eh_server *self)
 	return fd;
 }
 
+/* 1:ok, 0:bad address, -1:errno */
 int eh_server_ipv4_tcp(struct eh_server *self, const char *addr, unsigned port)
 {
-	int e = init_ipv4(self, addr, port);
+	struct sockaddr_in sin;
+
+	int e = init_ipv4(&sin, addr, port);
 	if (e != 1)
 		return e; /* 0 or -1 */
 
-	if (init_tcp(self) < 0)
+	if ((self->fd = init_tcp(sin.sin_family)) < 0)
 		return -1; /* socket() call failed */
-	else if (bind(self->fd, (struct sockaddr *)&self->addr, self->addrlen) < 0) {
+	else if (bind(self->fd, (struct sockaddr *)&sin, sizeof(sin)) < 0) {
 		close(self->fd);
 		self->fd = -1;
 		return -1; /* bind() failed */
