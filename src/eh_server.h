@@ -32,11 +32,26 @@
 
 #include <sys/socket.h>
 
+#include <eh_connection.h>
+
 struct eh_server {
 	int fd;
+
+	ev_io connection_watcher;
+
+	struct eh_connection *(*on_connect) (struct eh_server *, int fd,
+					     struct sockaddr *, socklen_t);
+	void (*on_stop) (struct eh_server *, struct ev_loop *);
+
+	void (*on_error) (struct eh_server *, struct ev_loop *);
+	void (*on_accept_error) (struct eh_server *, struct ev_loop *, int);
 };
 
 int eh_server_ipv4_tcp(struct eh_server *self, const char *addr, unsigned port);
+int eh_server_listen(struct eh_server *self, unsigned backlog);
 int eh_server_finish(struct eh_server *self);
+
+int eh_server_start(struct eh_server *self, struct ev_loop *loop);
+void eh_server_stop(struct eh_server *self, struct ev_loop *loop);
 
 #endif /* !_EH_SERVER_H */

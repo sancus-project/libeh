@@ -28,6 +28,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 #include "eh_server.h"
+#include "eh_io.h"
 #include "eh.h"
 
 #ifdef HAVE_CONFIG_H
@@ -37,6 +38,7 @@
 #include <arpa/inet.h>  /* htons() */
 #include <string.h>
 #include <unistd.h>
+#include <errno.h>
 
 /* 1:ok, 0:bad address, -1:errno */
 static int init_ipv4(struct sockaddr_in *sin, const char *addr, unsigned port)
@@ -55,7 +57,7 @@ static int init_ipv4(struct sockaddr_in *sin, const char *addr, unsigned port)
 	return e;
 }
 
-/* <0 error, >=0 fd */
+/* -1:error, >=0 fd */
 static int init_tcp(int family)
 {
 	int fd = socket(family, SOCK_STREAM, 0);
@@ -73,6 +75,34 @@ static int init_tcp(int family)
 	return fd;
 }
 
+static void connect_callback(struct ev_loop *loop, ev_io *w, int revents)
+{
+	struct eh_server *self = w->data;
+
+	if ((revents & EV_READ)) {
+		struct eh_connection *conn = NULL;
+		struct sockaddr_storage addr;
+		socklen_t addrlen;
+
+		int fd = accept(self->fd, (struct sockaddr *)&addr, &addrlen);
+		if (fd >= 0) {
+			if (self->on_connect)
+				conn = self->on_connect(self, fd, (struct sockaddr *)&addr, addrlen);
+			if (conn == NULL)
+				close(fd);
+			else
+				eh_connection_start(conn, loop);
+		} else if (self->on_accept_error) {
+			if (errno != EAGAIN && errno != EWOULDBLOCK)
+				self->on_accept_error(self, loop, errno);
+		}
+	}
+	if (revents & EV_ERROR) {
+		if (self->on_error)
+			self->on_error(self, loop);
+	}
+}
+
 /* 1:ok, 0:bad address, -1:errno */
 int eh_server_ipv4_tcp(struct eh_server *self, const char *addr, unsigned port)
 {
@@ -82,6 +112,7 @@ int eh_server_ipv4_tcp(struct eh_server *self, const char *addr, unsigned port)
 	if (e != 1)
 		return e; /* 0 or -1 */
 
+	/* self->fd */
 	if ((self->fd = init_tcp(sin.sin_family)) < 0)
 		return -1; /* socket() call failed */
 	else if (bind(self->fd, (struct sockaddr *)&sin, sizeof(sin)) < 0) {
@@ -90,7 +121,14 @@ int eh_server_ipv4_tcp(struct eh_server *self, const char *addr, unsigned port)
 		return -1; /* bind() failed */
 	}
 
+	eh_io_init(&self->connection_watcher, connect_callback, self, self->fd, EH_READ);
+
 	return 1;
+}
+
+int eh_server_listen(struct eh_server *self, unsigned backlog)
+{
+	return listen(self->fd, backlog);
 }
 
 int eh_server_finish(struct eh_server *self)
@@ -100,4 +138,18 @@ int eh_server_finish(struct eh_server *self)
 		self->fd = -1;
 	}
 	return 0;
+}
+
+int eh_server_start(struct eh_server *self, struct ev_loop *loop)
+{
+	ev_io_start(loop, &self->connection_watcher);
+
+	return 0;
+}
+
+void eh_server_stop(struct eh_server *self, struct ev_loop *loop)
+{
+	ev_io_stop(loop, &self->connection_watcher);
+	if (self->on_stop)
+		self->on_stop(self, loop);
 }
