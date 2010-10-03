@@ -30,8 +30,12 @@
 #ifndef _EH_CONNECTION_H
 #define _EH_CONNECTION_H
 
+#include <ev.h>
+
 struct eh_connection {
 	int fd;
 };
+
+void eh_connection_start(struct eh_connection *self, struct ev_loop *loop);
 
 #endif /* !_EH_CONNECTION_H */
