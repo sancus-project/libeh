@@ -47,8 +47,9 @@ static int init_ipv4(struct sockaddr_in *sin, const char *addr, unsigned port)
 	sin->sin_family = AF_INET;
 	sin->sin_port = htons(port);
 
-	/* NULL, "" or "0" mean any address */
-	if (addr == NULL || addr[0] == '\0' || (addr[0] == '0' && addr[1] == '\0'))
+	/* NULL, "", "0" and "*" mean any address */
+	if (addr == NULL || addr[0] == '\0' ||
+	    ((addr[0] == '0' || addr[0] == '*') && addr[1] == '\0'))
 		sin->sin_addr.s_addr = htonl(INADDR_ANY);
 	else
 		e = inet_pton(sin->sin_family, addr, &sin->sin_addr);
@@ -83,7 +84,7 @@ static void connect_callback(struct ev_loop *loop, ev_io *w, int revents)
 		struct sockaddr_storage addr;
 		socklen_t addrlen;
 
-		int fd = accept(self->fd, (struct sockaddr *)&addr, &addrlen);
+		int fd = accept(w->fd, (struct sockaddr *)&addr, &addrlen);
 		if (fd >= 0) {
 			if (self->on_connect)
 				conn = self->on_connect(self, fd, (struct sockaddr *)&addr, addrlen);
@@ -93,7 +94,7 @@ static void connect_callback(struct ev_loop *loop, ev_io *w, int revents)
 				eh_connection_start(conn, loop);
 		} else if (self->on_accept_error) {
 			if (errno != EAGAIN && errno != EWOULDBLOCK)
-				self->on_accept_error(self, loop, errno);
+				self->on_accept_error(self, loop);
 		}
 	}
 	if (revents & EV_ERROR) {
@@ -106,36 +107,33 @@ static void connect_callback(struct ev_loop *loop, ev_io *w, int revents)
 int eh_server_ipv4_tcp(struct eh_server *self, const char *addr, unsigned port)
 {
 	struct sockaddr_in sin;
+	int fd;
 
 	int e = init_ipv4(&sin, addr, port);
 	if (e != 1)
 		return e; /* 0 or -1 */
 
 	/* self->fd */
-	if ((self->fd = init_tcp(sin.sin_family)) < 0)
+	if ((fd = init_tcp(sin.sin_family)) < 0)
 		return -1; /* socket() call failed */
-	else if (bind(self->fd, (struct sockaddr *)&sin, sizeof(sin)) < 0) {
-		close(self->fd);
-		self->fd = -1;
+	else if (bind(fd, (struct sockaddr *)&sin, sizeof(sin)) < 0) {
+		close(fd);
 		return -1; /* bind() failed */
 	}
 
-	eh_io_init(&self->connection_watcher, connect_callback, self, self->fd, EH_READ);
+	eh_io_init(&self->connection_watcher, connect_callback, self, fd, EH_READ);
 
 	return 1;
 }
 
 int eh_server_listen(struct eh_server *self, unsigned backlog)
 {
-	return listen(self->fd, backlog);
+	return listen(eh_server_fd(self), backlog);
 }
 
 int eh_server_finish(struct eh_server *self)
 {
-	if (self->fd < 0) {
-		close(self->fd);
-		self->fd = -1;
-	}
+	close(eh_server_fd(self));
 	return 0;
 }
 

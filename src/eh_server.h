@@ -34,8 +34,6 @@
 #include <eh_connection.h>
 
 struct eh_server {
-	int fd;
-
 	ev_io connection_watcher;
 
 	struct eh_connection *(*on_connect) (struct eh_server *, int fd,
@@ -43,8 +41,13 @@ struct eh_server {
 	void (*on_stop) (struct eh_server *, struct ev_loop *);
 
 	void (*on_error) (struct eh_server *, struct ev_loop *);
-	void (*on_accept_error) (struct eh_server *, struct ev_loop *, int);
+	void (*on_accept_error) (struct eh_server *, struct ev_loop *);
 };
+
+static inline int eh_server_fd(struct eh_server *self)
+{
+	return self->connection_watcher.fd;
+}
 
 int eh_server_ipv4_tcp(struct eh_server *self, const char *addr, unsigned port);
 int eh_server_listen(struct eh_server *self, unsigned backlog);
