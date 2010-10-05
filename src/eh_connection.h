@@ -31,10 +31,36 @@
 
 #include <ev.h>
 
-struct eh_connection {
-	int fd;
+enum eh_connection_error {
+	EH_CONNECTION_READ_ERROR,
+	EH_CONNECTION_READ_WATCHER_ERROR,
+	EH_CONNECTION_WRITE_WATCHER_ERROR,
 };
 
+struct eh_connection;
+
+struct eh_connection_cb {
+	void (*on_read) (struct eh_connection *, unsigned char *, size_t);
+
+	void (*on_error) (struct eh_connection *, struct ev_loop *, enum eh_connection_error);
+};
+
+struct eh_connection {
+	ev_io read_watcher;
+	ev_io write_watcher;
+
+	struct eh_connection_cb *cb;
+};
+
+static inline int eh_connection_fd(struct eh_connection *self)
+{
+	return self->read_watcher.fd;
+}
+
+int eh_connection_init(struct eh_connection *self, int fd);
+void eh_connecton_finish(struct eh_connection *self);
+
 void eh_connection_start(struct eh_connection *self, struct ev_loop *loop);
+void eh_connection_stop(struct eh_connection *self, struct ev_loop *loop);
 
 #endif /* !_EH_CONNECTION_H */
