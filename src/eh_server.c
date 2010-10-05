@@ -79,7 +79,7 @@ static void connect_callback(struct ev_loop *loop, ev_io *w, int revents)
 {
 	struct eh_server *self = w->data;
 
-	if ((revents & EV_READ)) {
+	if (revents & EV_READ) {
 		struct eh_connection *conn = NULL;
 		struct sockaddr_storage addr;
 		socklen_t addrlen;
@@ -92,15 +92,12 @@ static void connect_callback(struct ev_loop *loop, ev_io *w, int revents)
 				close(fd);
 			else
 				eh_connection_start(conn, loop);
-		} else if (self->on_accept_error) {
-			if (errno != EAGAIN && errno != EWOULDBLOCK)
-				self->on_accept_error(self, loop);
+		} else if (self->on_error && errno != EAGAIN && errno != EWOULDBLOCK) {
+			self->on_error(self, loop, EH_SERVER_ACCEPT_ERROR);
 		}
 	}
-	if (revents & EV_ERROR) {
-		if (self->on_error)
-			self->on_error(self, loop);
-	}
+	if ((revents & EV_ERROR) && self->on_error)
+		self->on_error(self, loop, EH_SERVER_WATCHER_ERROR);
 }
 
 /* 1:ok, 0:bad address, -1:errno */
@@ -131,17 +128,14 @@ int eh_server_listen(struct eh_server *self, unsigned backlog)
 	return listen(eh_server_fd(self), backlog);
 }
 
-int eh_server_finish(struct eh_server *self)
+void eh_server_finish(struct eh_server *self)
 {
 	close(eh_server_fd(self));
-	return 0;
 }
 
-int eh_server_start(struct eh_server *self, struct ev_loop *loop)
+void eh_server_start(struct eh_server *self, struct ev_loop *loop)
 {
 	ev_io_start(loop, &self->connection_watcher);
-
-	return 0;
 }
 
 void eh_server_stop(struct eh_server *self, struct ev_loop *loop)

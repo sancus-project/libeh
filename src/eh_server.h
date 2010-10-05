@@ -33,6 +33,11 @@
 
 #include <eh_connection.h>
 
+enum eh_server_error {
+	EH_SERVER_ACCEPT_ERROR,
+	EH_SERVER_WATCHER_ERROR,
+};
+
 struct eh_server {
 	ev_io connection_watcher;
 
@@ -40,8 +45,7 @@ struct eh_server {
 					     struct sockaddr *, socklen_t);
 	void (*on_stop) (struct eh_server *, struct ev_loop *);
 
-	void (*on_error) (struct eh_server *, struct ev_loop *);
-	void (*on_accept_error) (struct eh_server *, struct ev_loop *);
+	void (*on_error) (struct eh_server *, struct ev_loop *, enum eh_server_error);
 };
 
 static inline int eh_server_fd(struct eh_server *self)
@@ -51,9 +55,9 @@ static inline int eh_server_fd(struct eh_server *self)
 
 int eh_server_ipv4_tcp(struct eh_server *self, const char *addr, unsigned port);
 int eh_server_listen(struct eh_server *self, unsigned backlog);
-int eh_server_finish(struct eh_server *self);
+void eh_server_finish(struct eh_server *self);
 
-int eh_server_start(struct eh_server *self, struct ev_loop *loop);
+void eh_server_start(struct eh_server *self, struct ev_loop *loop);
 void eh_server_stop(struct eh_server *self, struct ev_loop *loop);
 
 #endif /* !_EH_SERVER_H */
