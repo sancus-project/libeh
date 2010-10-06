@@ -60,18 +60,37 @@ static int init_ipv4(struct sockaddr_in *sin, const char *addr, unsigned port)
 /* -1:error, >=0 fd */
 static int init_tcp(int family)
 {
-	int fd = socket(family, SOCK_STREAM, 0);
+	int sock_type = SOCK_STREAM;
+#ifdef SOCK_NONBLOCK
+	sock_type |= SOCK_NONBLOCK;
+#endif
+	int fd = socket(family, sock_type, 0);
 
-	if (fd < 0)
-		return -1;
-	else {
+	if (fd >= 0) {
 		int flags = 1;
 		struct linger ling = {0, 0}; /* disabled */
 
+#ifndef SOCK_NONBLOCK
+		int fl = fcntl(fd, F_GETFL, 0);
+		if (fl < 0)
+			goto fail_fcntl;
+		fl |= O_NONBLOCK;
+		if (fcntl(fd, F_SETFL, fl) < 0)
+			goto fail_fcntl;
+#endif
 		setsockopt(fd, SOL_SOCKET, SO_REUSEADDR, (void *)&flags, sizeof(flags));
 		setsockopt(fd, SOL_SOCKET, SO_KEEPALIVE, (void *)&flags, sizeof(flags));
 		setsockopt(fd, SOL_SOCKET, SO_LINGER, (void *)&ling, sizeof(ling));
 	}
+
+#ifndef SOCK_NONBLOCK
+	goto done;
+
+fail_fcntl:
+	close(fd);
+	fd = -1;
+done:
+#endif
 	return fd;
 }
 
