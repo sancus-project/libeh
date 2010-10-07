@@ -45,4 +45,9 @@ static inline void eh_io_init(ev_io *w, void (*cb) (struct ev_loop *, ev_io *, i
 	w->data = data;
 }
 
+static inline bool eh_io_active(ev_io *w)
+{
+	return ev_is_active(w);
+}
+
 #endif /* !_EH_IO_H */
