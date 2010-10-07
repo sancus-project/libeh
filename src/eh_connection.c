@@ -38,12 +38,17 @@
 
 #include <unistd.h>
 #include <errno.h>
+#include <assert.h>
 
 /* callbacks */
 static void read_callback(struct ev_loop *loop, ev_io *w, int revents)
 {
 	struct eh_connection *self = w->data;
-	struct eh_connection_cb *cb = self->cb;
+	struct eh_connection_cb *cb;
+
+	assert(self != NULL);
+	assert(self->cb != NULL);
+	cb = self->cb;
 
 	if (revents & EV_READ) {
 		unsigned char buf[READ_BUF_SIZE];
@@ -51,7 +56,8 @@ static void read_callback(struct ev_loop *loop, ev_io *w, int revents)
 
 		if (l > 0 && cb->on_read) {
 			cb->on_read(self, buf, l);
-		} else if (l < 0 && cb->on_error && errno != EAGAIN && errno != EWOULDBLOCK) {
+		} else if (l < 0 && cb->on_error &&
+			   errno != EAGAIN && errno != EINTR && errno != EWOULDBLOCK) {
 			cb->on_error(self, loop, EH_CONNECTION_READ_ERROR);
 		}
 	}
@@ -63,7 +69,11 @@ static void read_callback(struct ev_loop *loop, ev_io *w, int revents)
 static void write_callback(struct ev_loop *loop, ev_io *w, int revents)
 {
 	struct eh_connection *self = w->data;
-	struct eh_connection_cb *cb = self->cb;
+	struct eh_connection_cb *cb;
+
+	assert(self != NULL);
+	assert(self->cb != NULL);
+	cb = self->cb;
 
 	if (revents & EV_WRITE) {
 		/* anything to write? */
