@@ -43,7 +43,12 @@
 #define syserr(S)	_errf("E: " S ": %s", strerror(errno))
 #define syserrf(F, ...)	_errf("E: " F ": %s", __VA_ARGS__, strerror(errno))
 
-#define debug(S)	_errf("D: %s:%u: %s (%s)", __FILE__, __LINE__, S, __func__)
-#define debugf(F, ...)	_errf("D: %s:%u: " F " (%s)", __FILE__, __LINE__, __VA_ARGS__, __func__)
+#ifndef NDEBUG
+#define debug(S)	_errf("D: %s:%u: %s: %s", __FILE__, __LINE__, __func__, S)
+#define debugf(F, ...)	_errf("D: %s:%u: %s: " F, __FILE__, __LINE__, __func__, __VA_ARGS__)
+#else
+#define debug(S)
+#define debugf(...)
+#endif
 
 #endif
