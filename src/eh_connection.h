@@ -30,6 +30,7 @@
 #define _EH_CONNECTION_H
 
 #include <ev.h>
+#include <stdbool.h>
 
 enum eh_connection_error {
 	EH_CONNECTION_READ_ERROR,
@@ -41,8 +42,9 @@ struct eh_connection;
 
 struct eh_connection_cb {
 	void (*on_read) (struct eh_connection *, unsigned char *, size_t);
+	void (*on_close) (struct eh_connection *);
 
-	void (*on_error) (struct eh_connection *, struct ev_loop *, enum eh_connection_error);
+	bool (*on_error) (struct eh_connection *, struct ev_loop *, enum eh_connection_error);
 };
 
 struct eh_connection {
@@ -58,7 +60,7 @@ static inline int eh_connection_fd(struct eh_connection *self)
 }
 
 int eh_connection_init(struct eh_connection *self, int fd);
-void eh_connecton_finish(struct eh_connection *self);
+void eh_connection_finish(struct eh_connection *self);
 
 void eh_connection_start(struct eh_connection *self, struct ev_loop *loop);
 void eh_connection_stop(struct eh_connection *self, struct ev_loop *loop);

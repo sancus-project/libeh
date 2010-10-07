@@ -52,18 +52,33 @@ static void read_callback(struct ev_loop *loop, ev_io *w, int revents)
 
 	if (revents & EV_READ) {
 		unsigned char buf[READ_BUF_SIZE];
-		ssize_t l = read(w->fd, buf, sizeof(*buf));
+		ssize_t l = read(w->fd, buf, sizeof(buf));
 
-		if (l > 0 && cb->on_read) {
+		if (l == 0) { /* EOF */
+			goto terminate;
+		} else if (l < 0 && errno != EAGAIN && errno != EINTR && errno != EWOULDBLOCK) {
+			int close = 1;
+			if (cb->on_error)
+				close = cb->on_error(self, loop, EH_CONNECTION_READ_ERROR);
+			if (close)
+				goto terminate;
+		} else if (l > 0 && cb->on_read) {
 			cb->on_read(self, buf, l);
-		} else if (l < 0 && cb->on_error &&
-			   errno != EAGAIN && errno != EINTR && errno != EWOULDBLOCK) {
-			cb->on_error(self, loop, EH_CONNECTION_READ_ERROR);
 		}
 	}
 
-	if ((revents & EV_ERROR) && cb->on_error)
-		cb->on_error(self, loop, EH_CONNECTION_READ_WATCHER_ERROR);
+	if (revents & EV_ERROR) {
+		bool close = true;
+		if (cb->on_error)
+			close = cb->on_error(self, loop, EH_CONNECTION_READ_WATCHER_ERROR);
+		if (close)
+			goto terminate;
+	}
+
+	return;
+terminate:
+	eh_connection_stop(self, loop);
+	eh_connection_finish(self);
 }
 
 static void write_callback(struct ev_loop *loop, ev_io *w, int revents)
@@ -79,30 +94,65 @@ static void write_callback(struct ev_loop *loop, ev_io *w, int revents)
 		/* anything to write? */
 		ev_io_stop(loop, w);
 	}
-	if (revents & EV_ERROR && cb->on_error)
-		cb->on_error(self, loop, EH_CONNECTION_WRITE_WATCHER_ERROR);
+	if (revents & EV_ERROR) {
+		bool close = true;
+		if (cb->on_error)
+			close = cb->on_error(self, loop, EH_CONNECTION_WRITE_WATCHER_ERROR);
+		if (close) {
+			eh_connection_stop(self, loop);
+			eh_connection_finish(self);
+		}
+	}
 }
 
 /* exported */
 int eh_connection_init(struct eh_connection *self, int fd)
 {
+	assert(self != NULL);
+	assert(fd >= 0);
+
 	eh_io_init(&self->read_watcher, read_callback, self, fd, EH_READ);
 	eh_io_init(&self->write_watcher, write_callback, self, fd, EH_WRITE);
 	return 1;
 }
 
-void eh_connection_finish(struct eh_connection *UNUSED(self))
+void eh_connection_finish(struct eh_connection *self)
 {
+	struct eh_connection_cb *cb;
+
+	assert(self != NULL);
+	assert(self->cb != NULL);
+	assert(!eh_io_active(&self->read_watcher));
+	assert(!eh_io_active(&self->write_watcher));
+
+	cb = self->cb;
+
+	close(self->read_watcher.fd);
+
+	/* on_close() is mandatory, you need to release the connection somehow */
+	assert(cb->on_close);
+	cb->on_close(self);
 }
 
 void eh_connection_start(struct eh_connection *self, struct ev_loop *loop)
 {
-	ev_io_start(loop, &self->read_watcher);
+	assert(self != NULL);
+	assert(loop != NULL);
+
+	if (!eh_io_active(&self->read_watcher))
+		ev_io_start(loop, &self->read_watcher);
+
 	/* TODO: if anything to write, start the write_watcher too */
 }
 
 void eh_connection_stop(struct eh_connection *self, struct ev_loop *loop)
 {
-	ev_io_stop(loop, &self->read_watcher);
-	ev_io_stop(loop, &self->write_watcher);
+	assert(self != NULL);
+	assert(loop != NULL);
+
+	if (eh_io_active(&self->read_watcher))
+		ev_io_stop(loop, &self->read_watcher);
+
+	if (eh_io_active(&self->write_watcher))
+		ev_io_stop(loop, &self->write_watcher);
 }
