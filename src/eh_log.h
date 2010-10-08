@@ -29,6 +29,10 @@
 #ifndef _EH_LOG_H
 #define _EH_LOG_H
 
+#include <stdio.h>	/* fprintf() */
+#include <string.h>	/* strerror() */
+#include <errno.h>	/* errno */
+
 #define _err(S)		fputs(S "\n", stderr)
 #define _errf(F, ...)	fprintf(stderr, F "\n", __VA_ARGS__)
 
@@ -47,8 +51,8 @@
 #define debug(S)	_errf("D: %s:%u: %s: %s", __FILE__, __LINE__, __func__, S)
 #define debugf(F, ...)	_errf("D: %s:%u: %s: " F, __FILE__, __LINE__, __func__, __VA_ARGS__)
 #else
-#define debug(S)
-#define debugf(...)
+#define debug(S)	((void)0)
+#define debugf(...)	((void)0)
 #endif
 
 #endif
