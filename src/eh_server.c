@@ -102,8 +102,10 @@ static void connect_callback(struct ev_loop *loop, ev_io *w, int revents)
 		struct eh_connection *conn = NULL;
 		struct sockaddr_storage addr;
 		socklen_t addrlen;
+		int fd;
 
-		int fd = accept(w->fd, (struct sockaddr *)&addr, &addrlen);
+try_accept:
+		fd = accept(w->fd, (struct sockaddr *)&addr, &addrlen);
 		if (fd >= 0) {
 			if (self->on_connect)
 				conn = self->on_connect(self, fd, (struct sockaddr *)&addr, addrlen);
@@ -111,6 +113,8 @@ static void connect_callback(struct ev_loop *loop, ev_io *w, int revents)
 				close(fd);
 			else
 				eh_connection_start(conn, loop);
+		} else if (errno == EINTR) {
+			goto try_accept;
 		} else if (self->on_error && errno != EAGAIN && errno != EWOULDBLOCK) {
 			self->on_error(self, loop, EH_SERVER_ACCEPT_ERROR);
 		}
