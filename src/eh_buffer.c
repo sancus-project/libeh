@@ -32,6 +32,13 @@
 #include <assert.h>
 #include <unistd.h>
 
+/* -Winline doesn't like this as static inline */
+static void __eh_buffer_rebase(struct eh_buffer *self)
+{
+	memmove(self->buf, eh_buffer_data(self), self->len);
+	self->base = 0;
+}
+
 ssize_t eh_buffer_init(struct eh_buffer *self, uint8_t *buf, size_t size)
 {
 	assert(self != NULL);
@@ -51,10 +58,38 @@ ssize_t eh_buffer_read(struct eh_buffer *self, int fd)
 		return 0; /* full */
 
 	/* maintainance */
-	if (self->base > 0 && self->len == 0)
-		eh_buffer_reset(self);
-	else if (self->base + self->len == self->size)
-		eh_buffer_rebase(self);
+	if (self->base > 0) {
+		if (self->len == 0)
+			eh_buffer_reset(self);
+		else if (self->base + self->len == self->size)
+			__eh_buffer_rebase(self);
+	}
 
 	return read(fd, eh_buffer_next(self), eh_buffer_freetail(self));
+}
+
+ssize_t eh_buffer_write(struct eh_buffer *self, int fd)
+{
+	ssize_t l;
+	assert(self != NULL);
+	assert(fd >= 0);
+
+	if (eh_buffer_len(self) == 0) {
+		eh_buffer_reset(self);
+		return 0; /* empty */
+	}
+
+	l = write(fd, eh_buffer_data(self), eh_buffer_len(self));
+	if (l == (ssize_t)eh_buffer_len(self))
+		eh_buffer_reset(self);
+	else if (l > 0) {
+		self->len -= l;
+		self->base += l;
+
+		/* make some tail space */
+		if (self->base + self->len == self->size)
+			__eh_buffer_rebase(self);
+	}
+
+	return l;
 }
