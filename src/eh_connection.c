@@ -101,18 +101,36 @@ static void write_callback(struct ev_loop *loop, ev_io *w, int revents)
 	cb = self->cb;
 
 	if (revents & EV_WRITE) {
-		/* anything to write? */
-		ev_io_stop(loop, w);
+		ssize_t wc;
+		if (eh_buffer_len(&self->write_buffer) == 0)
+			goto stop_it;
+
+		wc = eh_buffer_write(&self->write_buffer, w->fd);
+		if (wc < 0 && errno != EAGAIN && errno != EINTR && errno != EWOULDBLOCK) {
+			bool close = true;
+			if (cb->on_error)
+				close = cb->on_error(self, loop, EH_CONNECTION_WRITE_ERROR);
+			if (close)
+				goto terminate;
+		}
+
+		if (eh_buffer_len(&self->write_buffer) == 0) {
+stop_it:
+			ev_io_stop(loop, w);
+		}
 	}
 	if (revents & EV_ERROR) {
 		bool close = true;
 		if (cb->on_error)
 			close = cb->on_error(self, loop, EH_CONNECTION_WRITE_WATCHER_ERROR);
-		if (close) {
-			eh_connection_stop(self, loop);
-			eh_connection_finish(self);
-		}
+		if (close)
+			goto terminate;
 	}
+
+	return;
+terminate:
+	eh_connection_stop(self, loop);
+	eh_connection_finish(self);
 }
 
 /* exported */
@@ -157,7 +175,8 @@ void eh_connection_start(struct eh_connection *self, struct ev_loop *loop)
 	if (!eh_io_active(&self->read_watcher))
 		ev_io_start(loop, &self->read_watcher);
 
-	/* TODO: if anything to write, start the write_watcher too */
+	if (eh_buffer_len(&self->write_buffer) > 0 && !eh_io_active(&self->write_watcher))
+		ev_io_start(loop, &self->write_watcher);
 }
 
 void eh_connection_stop(struct eh_connection *self, struct ev_loop *loop)
