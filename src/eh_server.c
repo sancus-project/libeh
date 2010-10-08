@@ -38,6 +38,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <errno.h>
+#include <assert.h>
 
 /* 1:ok, 0:bad address, -1:errno */
 static int init_ipv4(struct sockaddr_in *sin, const char *addr, unsigned port)
@@ -105,7 +106,12 @@ static void connect_callback(struct ev_loop *loop, ev_io *w, int revents)
 		int fd;
 
 try_accept:
+		addrlen = sizeof(addr);
+		memset(&addr, '\0', sizeof(addr));
+
 		fd = accept(w->fd, (struct sockaddr *)&addr, &addrlen);
+		assert(fd < 0 || addr.ss_family != 0);
+
 		if (fd >= 0) {
 			if (self->on_connect)
 				conn = self->on_connect(self, fd, (struct sockaddr *)&addr, addrlen);
