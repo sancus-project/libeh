@@ -3,7 +3,7 @@
  *
  * Copyright (c) 2010, Alejandro Mery <amery@geeks.cl>
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  *   * Redistributions of source code must retain the above copyright
@@ -51,19 +51,29 @@ static void read_callback(struct ev_loop *loop, ev_io *w, int revents)
 	cb = self->cb;
 
 	if (revents & EV_READ) {
-		unsigned char buf[READ_BUF_SIZE];
-		ssize_t l = read(w->fd, buf, sizeof(buf));
+		struct eh_buffer *buf = &self->read_buffer;
+		ssize_t l;
+
+		if (eh_buffer_free(buf) == 0) {
+			bool close = true;
+			if (cb->on_error)
+				close = cb->on_error(self, loop, EH_CONNECTION_READ_FULL);
+			if (close)
+				goto terminate;
+		}
+
+		l = eh_buffer_read(buf, w->fd);
 
 		if (l == 0) { /* EOF */
 			goto terminate;
 		} else if (l < 0 && errno != EAGAIN && errno != EINTR && errno != EWOULDBLOCK) {
-			int close = 1;
+			bool close = true;
 			if (cb->on_error)
 				close = cb->on_error(self, loop, EH_CONNECTION_READ_ERROR);
 			if (close)
 				goto terminate;
 		} else if (l > 0 && cb->on_read) {
-			cb->on_read(self, buf, l);
+			cb->on_read(self, eh_buffer_data(buf), eh_buffer_len(buf));
 		}
 	}
 
@@ -106,10 +116,15 @@ static void write_callback(struct ev_loop *loop, ev_io *w, int revents)
 }
 
 /* exported */
-int eh_connection_init(struct eh_connection *self, int fd)
+int eh_connection_init(struct eh_connection *self, int fd,
+		       uint8_t *read_buf, size_t read_buf_size,
+		       uint8_t *write_buf, size_t write_buf_size)
 {
 	assert(self != NULL);
 	assert(fd >= 0);
+
+	eh_buffer_init(&self->read_buffer, read_buf, read_buf_size);
+	eh_buffer_init(&self->write_buffer, write_buf, write_buf_size);
 
 	eh_io_init(&self->read_watcher, read_callback, self, fd, EH_READ);
 	eh_io_init(&self->write_watcher, write_callback, self, fd, EH_WRITE);

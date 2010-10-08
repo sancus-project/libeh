@@ -3,7 +3,7 @@
  *
  * Copyright (c) 2010, Alejandro Mery <amery@geeks.cl>
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  *   * Redistributions of source code must retain the above copyright
@@ -32,8 +32,11 @@
 #include <ev.h>
 #include <stdbool.h>
 
+#include <eh_buffer.h>
+
 enum eh_connection_error {
 	EH_CONNECTION_READ_ERROR,
+	EH_CONNECTION_READ_FULL,
 	EH_CONNECTION_READ_WATCHER_ERROR,
 	EH_CONNECTION_WRITE_WATCHER_ERROR,
 };
@@ -51,6 +54,9 @@ struct eh_connection {
 	ev_io read_watcher;
 	ev_io write_watcher;
 
+	struct eh_buffer read_buffer;
+	struct eh_buffer write_buffer;
+
 	struct eh_connection_cb *cb;
 };
 
@@ -59,7 +65,9 @@ static inline int eh_connection_fd(struct eh_connection *self)
 	return self->read_watcher.fd;
 }
 
-int eh_connection_init(struct eh_connection *self, int fd);
+int eh_connection_init(struct eh_connection *self, int fd,
+		       uint8_t *read_buf, size_t read_buf_size,
+		       uint8_t *write_buf, size_t write_buf_size);
 void eh_connection_finish(struct eh_connection *self);
 
 void eh_connection_start(struct eh_connection *self, struct ev_loop *loop);
