@@ -30,7 +30,7 @@
 #include "eh_buffer.h"
 
 #include <assert.h>
-#include <stdlib.h>
+#include <unistd.h>
 
 ssize_t eh_buffer_init(struct eh_buffer *self, uint8_t *buf, size_t size)
 {
@@ -40,4 +40,21 @@ ssize_t eh_buffer_init(struct eh_buffer *self, uint8_t *buf, size_t size)
 
 	*self = (struct eh_buffer) { .buf = buf, .base = 0, .len = 0, .size = size };
 	return size;
+}
+
+ssize_t eh_buffer_read(struct eh_buffer *self, int fd)
+{
+	assert(self != NULL);
+	assert(fd >= 0);
+
+	if (eh_buffer_free(self) == 0)
+		return 0; /* full */
+
+	/* maintainance */
+	if (self->base > 0 && self->len == 0)
+		eh_buffer_reset(self);
+	else if (self->base + self->len == self->size)
+		eh_buffer_rebase(self);
+
+	return read(fd, eh_buffer_next(self), eh_buffer_freetail(self));
 }

@@ -29,8 +29,9 @@
 #ifndef _EH_BUFFER_H
 #define _EH_BUFFER_H
 
-#include <stdint.h>
-#include <sys/types.h>
+#include <string.h>	/* memmove() */
+#include <stdint.h>	/* uint8_t */
+#include <sys/types.h>	/* size_t */
 
 struct eh_buffer {
 	uint8_t *buf;
@@ -41,4 +42,25 @@ struct eh_buffer {
 };
 
 ssize_t eh_buffer_init(struct eh_buffer *self, uint8_t *buf, size_t size);
+
+ssize_t eh_buffer_read(struct eh_buffer *self, int fd);
+
+#define eh_buffer_data(B)	((B)->buf + (B)->base)
+#define eh_buffer_next(B)	((B)->buf + (B)->base + (B)->len)
+#define eh_buffer_len(B)	((B)->len)
+#define eh_buffer_free(B)	((B)->size - (B)->len)
+#define eh_buffer_freetail(B)	((B)->size - (B)->len - (B)->base)
+
+static inline void eh_buffer_reset(struct eh_buffer *self)
+{
+	self->base = self->len = 0;
+}
+
+static inline void eh_buffer_rebase(struct eh_buffer *self)
+{
+	if (self->base > 0) {
+		memmove(self->buf, eh_buffer_data(self), self->len);
+		self->base = 0;
+	}
+}
 #endif
