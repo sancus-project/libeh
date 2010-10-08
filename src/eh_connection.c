@@ -62,18 +62,22 @@ static void read_callback(struct ev_loop *loop, ev_io *w, int revents)
 				goto terminate;
 		}
 
+try_read:
 		l = eh_buffer_read(buf, w->fd);
 
 		if (l == 0) { /* EOF */
 			goto terminate;
-		} else if (l < 0 && errno != EAGAIN && errno != EINTR && errno != EWOULDBLOCK) {
+		} else if (l > 0) { /* has new data, pass over */
+			if (cb->on_read)
+				cb->on_read(self, eh_buffer_data(buf), eh_buffer_len(buf));
+		} else if (errno == EINTR) {
+			goto try_read;
+		} else if (errno != EAGAIN && errno != EWOULDBLOCK) {
 			bool close = true;
 			if (cb->on_error)
 				close = cb->on_error(self, loop, EH_CONNECTION_READ_ERROR);
 			if (close)
 				goto terminate;
-		} else if (l > 0 && cb->on_read) {
-			cb->on_read(self, eh_buffer_data(buf), eh_buffer_len(buf));
 		}
 	}
 
@@ -105,9 +109,13 @@ static void write_callback(struct ev_loop *loop, ev_io *w, int revents)
 		if (eh_buffer_len(&self->write_buffer) == 0)
 			goto stop_it;
 
+try_write:
 		wc = eh_buffer_write(&self->write_buffer, w->fd);
-		if (wc < 0 && errno != EAGAIN && errno != EINTR && errno != EWOULDBLOCK) {
+		if (wc < 0 && errno != EAGAIN && errno != EWOULDBLOCK) {
 			bool close = true;
+			if (errno == EINTR)
+				goto try_write;
+
 			if (cb->on_error)
 				close = cb->on_error(self, loop, EH_CONNECTION_WRITE_ERROR);
 			if (close)
