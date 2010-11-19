@@ -26,8 +26,8 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#ifndef _EH_IO_H
-#define _EH_IO_H
+#ifndef _EH_WATCHER_H
+#define _EH_WATCHER_H
 
 #include <ev.h>
 
@@ -50,4 +50,4 @@ static inline bool eh_io_active(ev_io *w)
 	return ev_is_active(w);
 }
 
-#endif /* !_EH_IO_H */
+#endif /* !_EH_WATCHER_H */

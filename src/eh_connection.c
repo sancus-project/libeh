@@ -27,7 +27,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 #include "eh_connection.h"
-#include "eh_io.h"
+#include "eh_watcher.h"
 #include "eh.h"
 
 #ifdef HAVE_CONFIG_H
