@@ -39,6 +39,7 @@
 #include <unistd.h>
 #include <errno.h>
 #include <assert.h>
+#include <fcntl.h>
 
 /* 1:ok, 0:bad address, -1:errno */
 static int init_ipv4(struct sockaddr_in *sin, const char *addr, unsigned port)
