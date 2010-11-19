@@ -53,7 +53,13 @@ static inline int eh_server_fd(struct eh_server *self)
 	return self->connection_watcher.fd;
 }
 
+/*
+ * ALERT: eh_server_ipv4_tcp() does NOT initialize the callbacks, only the socket
+ *
+ * Returns: 1:ok, 0:bad address, -1:errno
+ */
 int eh_server_ipv4_tcp(struct eh_server *self, const char *addr, unsigned port);
+
 int eh_server_listen(struct eh_server *self, unsigned backlog);
 void eh_server_finish(struct eh_server *self);
 
