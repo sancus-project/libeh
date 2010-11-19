@@ -29,7 +29,13 @@
 #ifndef _EH_WATCHER_H
 #define _EH_WATCHER_H
 
+/*
+ * NOTE: the current purpose of this module is to reduce the abuse of casts
+ * done within ev.h and be more friendly to gcc strict-aliasing analysis
+ */
+
 #include <ev.h>
+#include <stdbool.h>
 
 enum eh_io_event {
 	EH_READ = EV_READ,
@@ -37,17 +43,43 @@ enum eh_io_event {
 	EH_RW = EV_READ|EV_WRITE
 };
 
+#define eh_watcher_set_priority(W,P)	do { \
+	(W)->priority = (P); \
+} while(0)
+
+#define eh_watcher_set_cb(W, CB)	do { \
+	(W)->cb = (CB); \
+} while(0)
+
+#define eh_watcher_set_data(W, D)	do { \
+	(W)->data = (D); \
+} while(0)
+
+#define eh_watcher_init(W,CB) do { \
+	(W)->active = (W)->pending = 0; \
+	eh_watcher_set_priority((W), 0); \
+	eh_watcher_set_cb((W), CB); \
+} while(0)
+
 static inline void eh_io_init(ev_io *w, void (*cb) (struct ev_loop *, ev_io *, int),
 			      void *data, int fd, enum eh_io_event event)
 {
-	ev_init(w, cb);
+	eh_watcher_init(w, cb);
 	ev_io_set(w, fd, event);
-	w->data = data;
+	eh_watcher_set_data(w, data);
 }
 
 static inline bool eh_io_active(ev_io *w)
 {
 	return ev_is_active(w);
+}
+
+static inline void eh_signal_init(ev_signal *w, void (*cb) (struct ev_loop *, ev_signal *, int),
+			      void *data, int signo)
+{
+	eh_watcher_init(w, cb);
+	ev_signal_set(w, signo);
+	eh_watcher_set_data(w, data);
 }
 
 #endif /* !_EH_WATCHER_H */
