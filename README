@@ -1,2 +1,7 @@
 libeh - helper library for event-driven applications
 Alejandro Mery <amery@geeks.cl>
+
+The purpose of libeh is to provide an agnotic infrastructure for
+event driven network servers written in C99 providing low and high
+level interfaces for usually needed features regardless the protocols
+used and regardless how memory is allocated.
