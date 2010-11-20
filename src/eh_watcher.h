@@ -82,4 +82,7 @@ static inline void eh_signal_init(ev_signal *w, void (*cb) (struct ev_loop *, ev
 	eh_watcher_set_data(w, data);
 }
 
+#define eh_signal_start(W, L)	ev_signal_start(L, W)
+#define eh_signal_stop(W, L)	ev_signal_stop(L, W)
+
 #endif /* !_EH_WATCHER_H */
