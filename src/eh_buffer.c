@@ -39,6 +39,9 @@ static void __eh_buffer_rebase(struct eh_buffer *self)
 	self->base = 0;
 }
 
+/**
+ * \brief Initializes a buffer using an externally provided chunk of memory.
+ */
 ssize_t eh_buffer_init(struct eh_buffer *self, uint8_t *buf, size_t size)
 {
 	assert(self != NULL);
@@ -51,6 +54,7 @@ ssize_t eh_buffer_init(struct eh_buffer *self, uint8_t *buf, size_t size)
 
 ssize_t eh_buffer_read(struct eh_buffer *self, int fd)
 {
+	ssize_t l;
 	assert(self != NULL);
 	assert(fd >= 0);
 
@@ -65,7 +69,14 @@ ssize_t eh_buffer_read(struct eh_buffer *self, int fd)
 			__eh_buffer_rebase(self);
 	}
 
-	return read(fd, eh_buffer_next(self), eh_buffer_freetail(self));
+	l = read(fd, eh_buffer_next(self), eh_buffer_freetail(self));
+	if (l > 0)
+		self->len += l;
+#if 0
+	else if (l == 0)
+		return EOF; /* how? */
+#endif
+	return l;
 }
 
 ssize_t eh_buffer_write(struct eh_buffer *self, int fd)
