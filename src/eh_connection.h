@@ -49,12 +49,14 @@ struct eh_connection_cb {
 	void (*on_read) (struct eh_connection *, unsigned char *, size_t);
 	void (*on_close) (struct eh_connection *);
 
-	bool (*on_error) (struct eh_connection *, struct ev_loop *, enum eh_connection_error);
+	bool (*on_error) (struct eh_connection *, enum eh_connection_error);
 };
 
 struct eh_connection {
 	ev_io read_watcher;
 	ev_io write_watcher;
+
+	struct ev_loop *loop;
 
 	struct eh_buffer read_buffer;
 	struct eh_buffer write_buffer;
@@ -73,9 +75,9 @@ int eh_connection_init(struct eh_connection *self, int fd,
 void eh_connection_finish(struct eh_connection *self);
 
 void eh_connection_start(struct eh_connection *self, struct ev_loop *loop);
-void eh_connection_stop(struct eh_connection *self, struct ev_loop *loop);
+void eh_connection_stop(struct eh_connection *self);
 
-ssize_t eh_connection_write(struct eh_connection *self, struct ev_loop *loop,
-			    const unsigned char *buffer, size_t len);
+ssize_t eh_connection_write(struct eh_connection *self, const unsigned char *buffer,
+			    size_t len);
 
 #endif /* !_EH_CONNECTION_H */

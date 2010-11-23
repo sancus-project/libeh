@@ -48,6 +48,8 @@ static void read_callback(struct ev_loop *loop, ev_io *w, int revents)
 
 	assert(self != NULL);
 	assert(self->cb != NULL);
+	assert(self->loop == loop);
+
 	cb = self->cb;
 
 	if (revents & EV_READ) {
@@ -57,7 +59,7 @@ static void read_callback(struct ev_loop *loop, ev_io *w, int revents)
 		if (eh_buffer_free(buf) == 0) {
 			bool close = true;
 			if (cb->on_error)
-				close = cb->on_error(self, loop, EH_CONNECTION_READ_FULL);
+				close = cb->on_error(self, EH_CONNECTION_READ_FULL);
 			if (close)
 				goto terminate;
 		}
@@ -75,7 +77,7 @@ try_read:
 		} else if (errno != EAGAIN && errno != EWOULDBLOCK) {
 			bool close = true;
 			if (cb->on_error)
-				close = cb->on_error(self, loop, EH_CONNECTION_READ_ERROR);
+				close = cb->on_error(self, EH_CONNECTION_READ_ERROR);
 			if (close)
 				goto terminate;
 		}
@@ -84,14 +86,14 @@ try_read:
 	if (revents & EV_ERROR) {
 		bool close = true;
 		if (cb->on_error)
-			close = cb->on_error(self, loop, EH_CONNECTION_READ_WATCHER_ERROR);
+			close = cb->on_error(self, EH_CONNECTION_READ_WATCHER_ERROR);
 		if (close)
 			goto terminate;
 	}
 
 	return;
 terminate:
-	eh_connection_stop(self, loop);
+	eh_connection_stop(self);
 	eh_connection_finish(self);
 }
 
@@ -117,7 +119,7 @@ try_write:
 				goto try_write;
 
 			if (cb->on_error)
-				close = cb->on_error(self, loop, EH_CONNECTION_WRITE_ERROR);
+				close = cb->on_error(self, EH_CONNECTION_WRITE_ERROR);
 			if (close)
 				goto terminate;
 		}
@@ -130,14 +132,14 @@ stop_it:
 	if (revents & EV_ERROR) {
 		bool close = true;
 		if (cb->on_error)
-			close = cb->on_error(self, loop, EH_CONNECTION_WRITE_WATCHER_ERROR);
+			close = cb->on_error(self, EH_CONNECTION_WRITE_WATCHER_ERROR);
 		if (close)
 			goto terminate;
 	}
 
 	return;
 terminate:
-	eh_connection_stop(self, loop);
+	eh_connection_stop(self);
 	eh_connection_finish(self);
 }
 
@@ -145,8 +147,7 @@ terminate:
  *
  * For now it only appends to the buffer and starts the write watcher
  */
-ssize_t eh_connection_write(struct eh_connection *self, struct ev_loop *loop,
-			    const uint8_t *data, size_t len)
+ssize_t eh_connection_write(struct eh_connection *self, const uint8_t *data, size_t len)
 {
 	struct eh_buffer *buffer;
 	struct eh_connection_cb *cb;
@@ -164,7 +165,7 @@ try_append:
 	if (eh_buffer_append(buffer, data, len) < 0) {
 		bool close = true;
 		if (cb->on_error)
-			close = cb->on_error(self, loop, EH_CONNECTION_WRITE_FULL);
+			close = cb->on_error(self, EH_CONNECTION_WRITE_FULL);
 
 		if (!close)
 			goto try_append;
@@ -173,7 +174,7 @@ try_append:
 	}
 
 	if (!eh_io_active(&self->write_watcher))
-		ev_io_start(loop, &self->write_watcher);
+		ev_io_start(self->loop, &self->write_watcher);
 
 	return len;
 }
@@ -215,7 +216,12 @@ void eh_connection_finish(struct eh_connection *self)
 void eh_connection_start(struct eh_connection *self, struct ev_loop *loop)
 {
 	assert(self != NULL);
-	assert(loop != NULL);
+	assert(loop != NULL || self->loop != NULL);
+
+	if (loop)
+		self->loop = loop;
+	else
+		loop = self->loop;
 
 	if (!eh_io_active(&self->read_watcher))
 		ev_io_start(loop, &self->read_watcher);
@@ -224,14 +230,14 @@ void eh_connection_start(struct eh_connection *self, struct ev_loop *loop)
 		ev_io_start(loop, &self->write_watcher);
 }
 
-void eh_connection_stop(struct eh_connection *self, struct ev_loop *loop)
+void eh_connection_stop(struct eh_connection *self)
 {
 	assert(self != NULL);
-	assert(loop != NULL);
+	assert(self->loop != NULL);
 
 	if (eh_io_active(&self->read_watcher))
-		ev_io_stop(loop, &self->read_watcher);
+		ev_io_stop(self->loop, &self->read_watcher);
 
 	if (eh_io_active(&self->write_watcher))
-		ev_io_stop(loop, &self->write_watcher);
+		ev_io_stop(self->loop, &self->write_watcher);
 }
