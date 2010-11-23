@@ -141,6 +141,43 @@ terminate:
 	eh_connection_finish(self);
 }
 
+/** Send some data to the peer
+ *
+ * For now it only appends to the buffer and starts the write watcher
+ */
+ssize_t eh_connection_write(struct eh_connection *self, struct ev_loop *loop,
+			    const uint8_t *data, size_t len)
+{
+	struct eh_buffer *buffer;
+	struct eh_connection_cb *cb;
+
+	assert(self != NULL);
+	assert(self->cb != NULL);
+	assert(data != NULL || len == 0);
+
+	if (len == 0)
+		return 0;
+
+	buffer = &self->write_buffer;
+	cb = self->cb;
+try_append:
+	if (eh_buffer_append(buffer, data, len) < 0) {
+		bool close = true;
+		if (cb->on_error)
+			close = cb->on_error(self, loop, EH_CONNECTION_WRITE_FULL);
+
+		if (!close)
+			goto try_append;
+		else
+			return -1;
+	}
+
+	if (!eh_io_active(&self->write_watcher))
+		ev_io_start(loop, &self->write_watcher);
+
+	return len;
+}
+
 /* exported */
 int eh_connection_init(struct eh_connection *self, int fd,
 		       uint8_t *read_buf, size_t read_buf_size,

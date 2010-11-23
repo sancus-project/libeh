@@ -38,6 +38,7 @@ enum eh_connection_error {
 	EH_CONNECTION_READ_ERROR,
 	EH_CONNECTION_WRITE_ERROR,
 	EH_CONNECTION_READ_FULL,
+	EH_CONNECTION_WRITE_FULL,
 	EH_CONNECTION_READ_WATCHER_ERROR,
 	EH_CONNECTION_WRITE_WATCHER_ERROR,
 };
@@ -73,5 +74,8 @@ void eh_connection_finish(struct eh_connection *self);
 
 void eh_connection_start(struct eh_connection *self, struct ev_loop *loop);
 void eh_connection_stop(struct eh_connection *self, struct ev_loop *loop);
+
+ssize_t eh_connection_write(struct eh_connection *self, struct ev_loop *loop,
+			    const unsigned char *buffer, size_t len);
 
 #endif /* !_EH_CONNECTION_H */
