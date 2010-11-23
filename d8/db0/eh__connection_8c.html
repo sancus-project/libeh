@@ -74,6 +74,8 @@ Defines</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/db0/eh__connection_8c.html#a4245ea3fba0358165b402a7a615419bb">READ_BUF_SIZE</a>&nbsp;&nbsp;&nbsp;4096</td></tr>
 <tr><td colspan="2"><h2><a name="func-members"></a>
 Functions</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">ssize_t&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/db0/eh__connection_8c.html#a9fe5cc2c26bdeb83dd94457721e3bee5">eh_connection_write</a> (struct <a class="el" href="../../dc/dd6/structeh__connection.html">eh_connection</a> *self, const unsigned char *data, size_t len)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Send some data to the peer.  <a href="#a9fe5cc2c26bdeb83dd94457721e3bee5"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/db0/eh__connection_8c.html#a493a88bce8bb84064fdfb2961e4d7fa2">eh_connection_init</a> (struct <a class="el" href="../../dc/dd6/structeh__connection.html">eh_connection</a> *self, int fd, uint8_t *read_buf, size_t read_buf_size, uint8_t *write_buf, size_t write_buf_size)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/db0/eh__connection_8c.html#abe0bded257f380fee2187f09f508bdab">eh_connection_finish</a> (struct <a class="el" href="../../dc/dd6/structeh__connection.html">eh_connection</a> *self)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/db0/eh__connection_8c.html#a888378141da01d59c33f528f0689aceb">eh_connection_start</a> (struct <a class="el" href="../../dc/dd6/structeh__connection.html">eh_connection</a> *self, struct ev_loop *loop)</td></tr>
@@ -112,7 +114,7 @@ Functions</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="../../d8/db0/eh__connection_8c_source.html#l00160">160</a> of file <a class="el" href="../../d8/db0/eh__connection_8c_source.html">eh_connection.c</a>.</p>
+<p>Definition at line <a class="el" href="../../d8/db0/eh__connection_8c_source.html#l00238">238</a> of file <a class="el" href="../../d8/db0/eh__connection_8c_source.html">eh_connection.c</a>.</p>
 
 </div>
 </div>
@@ -165,7 +167,7 @@ Functions</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="../../d8/db0/eh__connection_8c_source.html#l00145">145</a> of file <a class="el" href="../../d8/db0/eh__connection_8c_source.html">eh_connection.c</a>.</p>
+<p>Definition at line <a class="el" href="../../d8/db0/eh__connection_8c_source.html#l00223">223</a> of file <a class="el" href="../../d8/db0/eh__connection_8c_source.html">eh_connection.c</a>.</p>
 
 </div>
 </div>
@@ -194,7 +196,7 @@ Functions</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="../../d8/db0/eh__connection_8c_source.html#l00178">178</a> of file <a class="el" href="../../d8/db0/eh__connection_8c_source.html">eh_connection.c</a>.</p>
+<p>Definition at line <a class="el" href="../../d8/db0/eh__connection_8c_source.html#l00256">256</a> of file <a class="el" href="../../d8/db0/eh__connection_8c_source.html">eh_connection.c</a>.</p>
 
 </div>
 </div>
@@ -223,7 +225,45 @@ Functions</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="../../d8/db0/eh__connection_8c_source.html#l00190">190</a> of file <a class="el" href="../../d8/db0/eh__connection_8c_source.html">eh_connection.c</a>.</p>
+<p>Definition at line <a class="el" href="../../d8/db0/eh__connection_8c_source.html#l00268">268</a> of file <a class="el" href="../../d8/db0/eh__connection_8c_source.html">eh_connection.c</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a9fe5cc2c26bdeb83dd94457721e3bee5"></a><!-- doxytag: member="eh_connection.c::eh_connection_write" ref="a9fe5cc2c26bdeb83dd94457721e3bee5" args="(struct eh_connection *self, const unsigned char *data, size_t len)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">ssize_t eh_connection_write </td>
+          <td>(</td>
+          <td class="paramtype">struct <a class="el" href="../../dc/dd6/structeh__connection.html">eh_connection</a> *&nbsp;</td>
+          <td class="paramname"> <em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const unsigned char *&nbsp;</td>
+          <td class="paramname"> <em>data</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&nbsp;</td>
+          <td class="paramname"> <em>len</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Send some data to the peer. </p>
+<p>First it will try to send straight away, if not everything was written, buffer it and start the write watcher for later delivery </p>
+
+<p>Definition at line <a class="el" href="../../d8/db0/eh__connection_8c_source.html#l00149">149</a> of file <a class="el" href="../../d8/db0/eh__connection_8c_source.html">eh_connection.c</a>.</p>
 
 </div>
 </div>
@@ -243,6 +283,6 @@ Functions</h2></td></tr>
 </div>
 
 <hr class="footer"/><address style="text-align: right;"><small>
-Generated on Sat Nov 20 2010 13:03:45 for libeh by&nbsp;<a href="http://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.png" alt="doxygen"/></a> 1.7.1</small></address>
+Generated on Tue Nov 23 2010 21:50:39 for libeh by&nbsp;<a href="http://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.png" alt="doxygen"/></a> 1.7.1</small></address>
 </body>
 </html>

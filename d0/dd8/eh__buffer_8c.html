@@ -67,11 +67,82 @@ Include dependency graph for eh_buffer.c:</div>
 <table class="memberdecls">
 <tr><td colspan="2"><h2><a name="func-members"></a>
 Functions</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/dd8/eh__buffer_8c.html#a21ec495ee64693187573aadec5e1059a">eh_buffer_rebase</a> (struct <a class="el" href="../../d6/db4/structeh__buffer.html">eh_buffer</a> *self)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Moves the content of a buffer to it's head.  <a href="#a21ec495ee64693187573aadec5e1059a"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">ssize_t&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/dd8/eh__buffer_8c.html#ab80542ad01b94552596879f340c30816">eh_buffer_init</a> (struct <a class="el" href="../../d6/db4/structeh__buffer.html">eh_buffer</a> *self, uint8_t *buf, size_t size)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Initializes a buffer using an externally provided chunk of memory.  <a href="#ab80542ad01b94552596879f340c30816"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">ssize_t&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/dd8/eh__buffer_8c.html#a5594647c8de059b0258eb616580d9b59">eh_buffer_read</a> (struct <a class="el" href="../../d6/db4/structeh__buffer.html">eh_buffer</a> *self, int fd)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Reads from a fd into a buffer.  <a href="#a5594647c8de059b0258eb616580d9b59"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">ssize_t&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/dd8/eh__buffer_8c.html#a21799ab90954892bcf6846236e72a0e3">eh_buffer_write</a> (struct <a class="el" href="../../d6/db4/structeh__buffer.html">eh_buffer</a> *self, int fd)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Tries to flush content from a buffer into a descriptor.  <a href="#a21799ab90954892bcf6846236e72a0e3"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">ssize_t&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/dd8/eh__buffer_8c.html#a77c77e0784a414a739c3ad7baf532e2d">eh_buffer_append</a> (struct <a class="el" href="../../d6/db4/structeh__buffer.html">eh_buffer</a> *self, const uint8_t *data, size_t len)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">ssize_t&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/dd8/eh__buffer_8c.html#ada53475bb9b2644605fc7177963ca728">eh_buffer_appendz</a> (struct <a class="el" href="../../d6/db4/structeh__buffer.html">eh_buffer</a> *self, const char *str)</td></tr>
 </table>
 <hr/><h2>Function Documentation</h2>
+<a class="anchor" id="a77c77e0784a414a739c3ad7baf532e2d"></a><!-- doxytag: member="eh_buffer.c::eh_buffer_append" ref="a77c77e0784a414a739c3ad7baf532e2d" args="(struct eh_buffer *self, const uint8_t *data, size_t len)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">ssize_t eh_buffer_append </td>
+          <td>(</td>
+          <td class="paramtype">struct <a class="el" href="../../d6/db4/structeh__buffer.html">eh_buffer</a> *&nbsp;</td>
+          <td class="paramname"> <em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const uint8_t *&nbsp;</td>
+          <td class="paramname"> <em>data</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&nbsp;</td>
+          <td class="paramname"> <em>len</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Definition at line <a class="el" href="../../d0/dd8/eh__buffer_8c_source.html#l00117">117</a> of file <a class="el" href="../../d0/dd8/eh__buffer_8c_source.html">eh_buffer.c</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ada53475bb9b2644605fc7177963ca728"></a><!-- doxytag: member="eh_buffer.c::eh_buffer_appendz" ref="ada53475bb9b2644605fc7177963ca728" args="(struct eh_buffer *self, const char *str)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">ssize_t eh_buffer_appendz </td>
+          <td>(</td>
+          <td class="paramtype">struct <a class="el" href="../../d6/db4/structeh__buffer.html">eh_buffer</a> *&nbsp;</td>
+          <td class="paramname"> <em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *&nbsp;</td>
+          <td class="paramname"> <em>str</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Definition at line <a class="el" href="../../d0/dd8/eh__buffer_8c_source.html#l00138">138</a> of file <a class="el" href="../../d0/dd8/eh__buffer_8c_source.html">eh_buffer.c</a>.</p>
+
+</div>
+</div>
 <a class="anchor" id="ab80542ad01b94552596879f340c30816"></a><!-- doxytag: member="eh_buffer.c::eh_buffer_init" ref="ab80542ad01b94552596879f340c30816" args="(struct eh_buffer *self, uint8_t *buf, size_t size)" -->
 <div class="memitem">
 <div class="memproto">
@@ -103,7 +174,9 @@ Functions</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="../../d0/dd8/eh__buffer_8c_source.html#l00042">42</a> of file <a class="el" href="../../d0/dd8/eh__buffer_8c_source.html">eh_buffer.c</a>.</p>
+<p>Initializes a buffer using an externally provided chunk of memory. </p>
+
+<p>Definition at line <a class="el" href="../../d0/dd8/eh__buffer_8c_source.html#l00052">52</a> of file <a class="el" href="../../d0/dd8/eh__buffer_8c_source.html">eh_buffer.c</a>.</p>
 
 </div>
 </div>
@@ -132,7 +205,32 @@ Functions</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="../../d0/dd8/eh__buffer_8c_source.html#l00052">52</a> of file <a class="el" href="../../d0/dd8/eh__buffer_8c_source.html">eh_buffer.c</a>.</p>
+<p>Reads from a fd into a buffer. </p>
+
+<p>Definition at line <a class="el" href="../../d0/dd8/eh__buffer_8c_source.html#l00063">63</a> of file <a class="el" href="../../d0/dd8/eh__buffer_8c_source.html">eh_buffer.c</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a21ec495ee64693187573aadec5e1059a"></a><!-- doxytag: member="eh_buffer.c::eh_buffer_rebase" ref="a21ec495ee64693187573aadec5e1059a" args="(struct eh_buffer *self)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void eh_buffer_rebase </td>
+          <td>(</td>
+          <td class="paramtype">struct <a class="el" href="../../d6/db4/structeh__buffer.html">eh_buffer</a> *&nbsp;</td>
+          <td class="paramname"> <em>self</em></td>
+          <td>&nbsp;)&nbsp;</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Moves the content of a buffer to it's head. </p>
+<p>Don't call it unless you have data and it's not aligned at the begining </p>
+
+<p>Definition at line <a class="el" href="../../d0/dd8/eh__buffer_8c_source.html#l00039">39</a> of file <a class="el" href="../../d0/dd8/eh__buffer_8c_source.html">eh_buffer.c</a>.</p>
 
 </div>
 </div>
@@ -161,7 +259,9 @@ Functions</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="../../d0/dd8/eh__buffer_8c_source.html#l00071">71</a> of file <a class="el" href="../../d0/dd8/eh__buffer_8c_source.html">eh_buffer.c</a>.</p>
+<p>Tries to flush content from a buffer into a descriptor. </p>
+
+<p>Definition at line <a class="el" href="../../d0/dd8/eh__buffer_8c_source.html#l00091">91</a> of file <a class="el" href="../../d0/dd8/eh__buffer_8c_source.html">eh_buffer.c</a>.</p>
 
 </div>
 </div>
@@ -181,6 +281,6 @@ Functions</h2></td></tr>
 </div>
 
 <hr class="footer"/><address style="text-align: right;"><small>
-Generated on Sat Nov 20 2010 13:03:45 for libeh by&nbsp;<a href="http://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.png" alt="doxygen"/></a> 1.7.1</small></address>
+Generated on Tue Nov 23 2010 21:50:39 for libeh by&nbsp;<a href="http://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.png" alt="doxygen"/></a> 1.7.1</small></address>
 </body>
 </html>
