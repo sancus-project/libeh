@@ -70,8 +70,15 @@ try_read:
 		if (l == 0) { /* EOF */
 			goto terminate;
 		} else if (l > 0) { /* has new data, pass over */
+			ssize_t rc = eh_buffer_len(buf);
 			if (cb->on_read)
-				cb->on_read(self, eh_buffer_data(buf), eh_buffer_len(buf));
+				rc = cb->on_read(self, eh_buffer_data(buf), rc);
+
+			if (rc < 0)
+				goto terminate;
+			else
+				eh_buffer_skip(buf, rc);
+
 		} else if (errno == EINTR) {
 			goto try_read;
 		} else if (errno != EAGAIN && errno != EWOULDBLOCK) {

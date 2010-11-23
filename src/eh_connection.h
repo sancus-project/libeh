@@ -46,7 +46,7 @@ enum eh_connection_error {
 struct eh_connection;
 
 struct eh_connection_cb {
-	void (*on_read) (struct eh_connection *, unsigned char *, size_t);
+	ssize_t (*on_read) (struct eh_connection *, unsigned char *, size_t);
 	void (*on_close) (struct eh_connection *);
 
 	bool (*on_error) (struct eh_connection *, enum eh_connection_error);
