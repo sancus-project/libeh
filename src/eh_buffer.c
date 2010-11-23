@@ -46,6 +46,19 @@ void eh_buffer_rebase(struct eh_buffer *self)
 	self->base = 0;
 }
 
+void eh_buffer_skip(struct eh_buffer *self, size_t bytes)
+{
+	assert(self != NULL);
+	assert(bytes <= self->len);
+
+	if (bytes >= self->len)
+		eh_buffer_reset(self);
+	else {
+		self->base += bytes;
+		self->len -= bytes;
+	}
+}
+
 /**
  * \brief Initializes a buffer using an externally provided chunk of memory.
  */
