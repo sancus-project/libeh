@@ -32,9 +32,16 @@
 #include <assert.h>
 #include <unistd.h>
 
-/* -Winline doesn't like this as static inline */
-static void __eh_buffer_rebase(struct eh_buffer *self)
+/** Moves the content of a buffer to it's head
+ *
+ * Don't call it unless you have data and it's not aligned at the begining
+ */
+void eh_buffer_rebase(struct eh_buffer *self)
 {
+	assert(self != NULL);
+	assert(self->base > 0);
+	assert(self->len > 0);
+
 	memmove(self->buf, eh_buffer_data(self), self->len);
 	self->base = 0;
 }
@@ -52,6 +59,7 @@ ssize_t eh_buffer_init(struct eh_buffer *self, uint8_t *buf, size_t size)
 	return size;
 }
 
+/** Reads from a fd into a buffer */
 ssize_t eh_buffer_read(struct eh_buffer *self, int fd)
 {
 	ssize_t l;
@@ -66,7 +74,7 @@ ssize_t eh_buffer_read(struct eh_buffer *self, int fd)
 		if (self->len == 0)
 			eh_buffer_reset(self);
 		else if (self->base + self->len == self->size)
-			__eh_buffer_rebase(self);
+			eh_buffer_rebase(self);
 	}
 
 	l = read(fd, eh_buffer_next(self), eh_buffer_freetail(self));
@@ -79,6 +87,7 @@ ssize_t eh_buffer_read(struct eh_buffer *self, int fd)
 	return l;
 }
 
+/** Tries to flush content from a buffer into a descriptor */
 ssize_t eh_buffer_write(struct eh_buffer *self, int fd)
 {
 	ssize_t l;
@@ -99,7 +108,7 @@ ssize_t eh_buffer_write(struct eh_buffer *self, int fd)
 
 		/* make some tail space */
 		if (self->base + self->len == self->size)
-			__eh_buffer_rebase(self);
+			eh_buffer_rebase(self);
 	}
 
 	return l;

@@ -52,6 +52,8 @@ ssize_t eh_buffer_write(struct eh_buffer *self, int fd);
 #define eh_buffer_free(B)	((B)->size - (B)->len)
 #define eh_buffer_freetail(B)	((B)->size - (B)->len - (B)->base)
 
+void eh_buffer_rebase(struct eh_buffer *self);
+
 static inline void eh_buffer_reset(struct eh_buffer *self)
 {
 	self->base = self->len = 0;
