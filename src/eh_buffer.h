@@ -58,4 +58,7 @@ static inline void eh_buffer_reset(struct eh_buffer *self)
 {
 	self->base = self->len = 0;
 }
+
+ssize_t eh_buffer_append(struct eh_buffer *self, const uint8_t *data, size_t len);
+
 #endif

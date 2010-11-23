@@ -113,3 +113,24 @@ ssize_t eh_buffer_write(struct eh_buffer *self, int fd)
 
 	return l;
 }
+
+ssize_t eh_buffer_append(struct eh_buffer *self, const uint8_t *data, size_t len)
+{
+	assert(self != NULL);
+	assert(data != NULL || len == 0);
+
+	if (len == 0) {
+		return 0;
+	} else if (len <= eh_buffer_freetail(self)) {
+		goto append;
+	} else if (len > eh_buffer_free(self)) {
+		return -1;
+	} else {
+		eh_buffer_rebase(self);
+		goto append;
+	}
+append:
+	memcpy(eh_buffer_next(self), data, len);
+	self->len += len;
+	return len;
+}
