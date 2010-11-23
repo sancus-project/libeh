@@ -60,5 +60,6 @@ static inline void eh_buffer_reset(struct eh_buffer *self)
 }
 
 ssize_t eh_buffer_append(struct eh_buffer *self, const uint8_t *data, size_t len);
+ssize_t eh_buffer_appendz(struct eh_buffer *self, const char *str);
 
 #endif

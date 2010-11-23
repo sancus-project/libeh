@@ -134,3 +134,10 @@ append:
 	self->len += len;
 	return len;
 }
+
+ssize_t eh_buffer_appendz(struct eh_buffer *self, const char *str)
+{
+	assert(str != NULL);
+
+	return eh_buffer_append(self, (const uint8_t *)str, strlen(str));
+}
