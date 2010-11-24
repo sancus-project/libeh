@@ -44,4 +44,8 @@
 #	define UNUSED(x) x
 #endif
 
+#ifndef container_of
+#define container_of(P,T,M)	(T *)((char *)(P) - offsetof(T, M))
+#endif
+
 #endif /* !_EH_H */
