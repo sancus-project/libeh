@@ -29,6 +29,14 @@
 #ifndef _EH_H
 #define _EH_H
 
+/**
+ * \def UNUSED
+ * \brief Marks argument as unused to make gcc happy
+ *
+ * When the compiler is GCC the variable gets renamed, prefixing UNUSED_
+ * to be sure the variable does not get used, and attributed as unused.
+ * In other cases it's just passed along untouched.
+ */
 #ifdef UNUSED
 #elif defined(__GNUC__)
 #	define UNUSED(x) UNUSED_ ## x __attribute__((unused))
