@@ -104,16 +104,17 @@ var searchBox = new SearchBox("searchBox", "../../search",false,'Search');
 <a name="l00053"></a><a class="code" href="../../db/dba/eh__buffer_8h.html#abdc0f36ef9ec28a28e22e0a4ffd39ef5">00053</a> <span class="preprocessor"></span><span class="preprocessor">#define eh_buffer_freetail(B)   ((B)-&gt;size - (B)-&gt;len - (B)-&gt;base)</span>
 <a name="l00054"></a>00054 <span class="preprocessor"></span>
 <a name="l00055"></a>00055 <span class="keywordtype">void</span> <a class="code" href="../../d0/dd8/eh__buffer_8c.html#a21ec495ee64693187573aadec5e1059a" title="Moves the content of a buffer to it&amp;#39;s head.">eh_buffer_rebase</a>(<span class="keyword">struct</span> <a class="code" href="../../d6/db4/structeh__buffer.html">eh_buffer</a> *<span class="keyword">self</span>);
-<a name="l00056"></a>00056 
-<a name="l00057"></a>00057 <span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">void</span> eh_buffer_reset(<span class="keyword">struct</span> <a class="code" href="../../d6/db4/structeh__buffer.html">eh_buffer</a> *<span class="keyword">self</span>)
-<a name="l00058"></a>00058 {
-<a name="l00059"></a>00059         <span class="keyword">self</span>-&gt;base = <span class="keyword">self</span>-&gt;len = 0;
-<a name="l00060"></a>00060 }
-<a name="l00061"></a>00061 
-<a name="l00062"></a>00062 ssize_t <a class="code" href="../../d0/dd8/eh__buffer_8c.html#a77c77e0784a414a739c3ad7baf532e2d">eh_buffer_append</a>(<span class="keyword">struct</span> <a class="code" href="../../d6/db4/structeh__buffer.html">eh_buffer</a> *<span class="keyword">self</span>, <span class="keyword">const</span> uint8_t *data, <span class="keywordtype">size_t</span> len);
-<a name="l00063"></a>00063 ssize_t <a class="code" href="../../d0/dd8/eh__buffer_8c.html#ada53475bb9b2644605fc7177963ca728">eh_buffer_appendz</a>(<span class="keyword">struct</span> <a class="code" href="../../d6/db4/structeh__buffer.html">eh_buffer</a> *<span class="keyword">self</span>, <span class="keyword">const</span> <span class="keywordtype">char</span> *str);
-<a name="l00064"></a>00064 
-<a name="l00065"></a>00065 <span class="preprocessor">#endif</span>
+<a name="l00056"></a>00056 <span class="keywordtype">void</span> <a class="code" href="../../d0/dd8/eh__buffer_8c.html#a5642c26455ad9130f51bcf1a24ab4116">eh_buffer_skip</a>(<span class="keyword">struct</span> <a class="code" href="../../d6/db4/structeh__buffer.html">eh_buffer</a> *<span class="keyword">self</span>, <span class="keywordtype">size_t</span> bytes);
+<a name="l00057"></a>00057 
+<a name="l00058"></a>00058 <span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">void</span> eh_buffer_reset(<span class="keyword">struct</span> <a class="code" href="../../d6/db4/structeh__buffer.html">eh_buffer</a> *<span class="keyword">self</span>)
+<a name="l00059"></a>00059 {
+<a name="l00060"></a>00060         <span class="keyword">self</span>-&gt;base = <span class="keyword">self</span>-&gt;len = 0;
+<a name="l00061"></a>00061 }
+<a name="l00062"></a>00062 
+<a name="l00063"></a>00063 ssize_t <a class="code" href="../../d0/dd8/eh__buffer_8c.html#a77c77e0784a414a739c3ad7baf532e2d">eh_buffer_append</a>(<span class="keyword">struct</span> <a class="code" href="../../d6/db4/structeh__buffer.html">eh_buffer</a> *<span class="keyword">self</span>, <span class="keyword">const</span> uint8_t *data, <span class="keywordtype">size_t</span> len);
+<a name="l00064"></a>00064 ssize_t <a class="code" href="../../d0/dd8/eh__buffer_8c.html#ada53475bb9b2644605fc7177963ca728">eh_buffer_appendz</a>(<span class="keyword">struct</span> <a class="code" href="../../d6/db4/structeh__buffer.html">eh_buffer</a> *<span class="keyword">self</span>, <span class="keyword">const</span> <span class="keywordtype">char</span> *str);
+<a name="l00065"></a>00065 
+<a name="l00066"></a>00066 <span class="preprocessor">#endif</span>
 </pre></div></div>
 </div>
 <!--- window showing the filter options -->
@@ -131,6 +132,6 @@ var searchBox = new SearchBox("searchBox", "../../search",false,'Search');
 </div>
 
 <hr class="footer"/><address style="text-align: right;"><small>
-Generated on Tue Nov 23 2010 21:50:38 for libeh by&nbsp;<a href="http://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.png" alt="doxygen"/></a> 1.7.1</small></address>
+Generated on Wed Nov 24 2010 15:00:36 for libeh by&nbsp;<a href="http://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.png" alt="doxygen"/></a> 1.7.1</small></address>
 </body>
 </html>

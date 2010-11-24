@@ -95,9 +95,8 @@ Functions</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d45/eh__connection_8h.html#a493a88bce8bb84064fdfb2961e4d7fa2">eh_connection_init</a> (struct <a class="el" href="../../dc/dd6/structeh__connection.html">eh_connection</a> *self, int fd, uint8_t *read_buf, size_t read_buf_size, uint8_t *write_buf, size_t write_buf_size)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d45/eh__connection_8h.html#abe0bded257f380fee2187f09f508bdab">eh_connection_finish</a> (struct <a class="el" href="../../dc/dd6/structeh__connection.html">eh_connection</a> *self)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d45/eh__connection_8h.html#a888378141da01d59c33f528f0689aceb">eh_connection_start</a> (struct <a class="el" href="../../dc/dd6/structeh__connection.html">eh_connection</a> *self, struct ev_loop *loop)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d45/eh__connection_8h.html#a4faa1ea33b24f1ecbdb0c028c02884b0">eh_connection_stop</a> (struct <a class="el" href="../../dc/dd6/structeh__connection.html">eh_connection</a> *self, struct ev_loop *loop)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d45/eh__connection_8h.html#ae1fc14dd9a02dfa6c677cfcb0963c41b">eh_connection_stop</a> (struct <a class="el" href="../../dc/dd6/structeh__connection.html">eh_connection</a> *self)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">ssize_t&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d45/eh__connection_8h.html#afbb1711347429aca79ef7de9da5418c3">eh_connection_write</a> (struct <a class="el" href="../../dc/dd6/structeh__connection.html">eh_connection</a> *self, const unsigned char *buffer, size_t len)</td></tr>
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Send some data to the peer.  <a href="#afbb1711347429aca79ef7de9da5418c3"></a><br/></td></tr>
 </table>
 <hr/><h2>Enumeration Type Documentation</h2>
 <a class="anchor" id="a8b3372efd35bc8b26c761506d0863a6f"></a><!-- doxytag: member="eh_connection.h::eh_connection_error" ref="a8b3372efd35bc8b26c761506d0863a6f" args="" -->
@@ -148,7 +147,7 @@ Functions</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="../../d8/db0/eh__connection_8c_source.html#l00238">238</a> of file <a class="el" href="../../d8/db0/eh__connection_8c_source.html">eh_connection.c</a>.</p>
+<p>Definition at line <a class="el" href="../../d8/db0/eh__connection_8c_source.html#l00205">205</a> of file <a class="el" href="../../d8/db0/eh__connection_8c_source.html">eh_connection.c</a>.</p>
 
 </div>
 </div>
@@ -201,7 +200,7 @@ Functions</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="../../d8/db0/eh__connection_8c_source.html#l00223">223</a> of file <a class="el" href="../../d8/db0/eh__connection_8c_source.html">eh_connection.c</a>.</p>
+<p>Definition at line <a class="el" href="../../d8/db0/eh__connection_8c_source.html#l00190">190</a> of file <a class="el" href="../../d8/db0/eh__connection_8c_source.html">eh_connection.c</a>.</p>
 
 </div>
 </div>
@@ -230,11 +229,11 @@ Functions</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="../../d8/db0/eh__connection_8c_source.html#l00256">256</a> of file <a class="el" href="../../d8/db0/eh__connection_8c_source.html">eh_connection.c</a>.</p>
+<p>Definition at line <a class="el" href="../../d8/db0/eh__connection_8c_source.html#l00223">223</a> of file <a class="el" href="../../d8/db0/eh__connection_8c_source.html">eh_connection.c</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a4faa1ea33b24f1ecbdb0c028c02884b0"></a><!-- doxytag: member="eh_connection.h::eh_connection_stop" ref="a4faa1ea33b24f1ecbdb0c028c02884b0" args="(struct eh_connection *self, struct ev_loop *loop)" -->
+<a class="anchor" id="ae1fc14dd9a02dfa6c677cfcb0963c41b"></a><!-- doxytag: member="eh_connection.h::eh_connection_stop" ref="ae1fc14dd9a02dfa6c677cfcb0963c41b" args="(struct eh_connection *self)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -242,24 +241,15 @@ Functions</h2></td></tr>
           <td class="memname">void eh_connection_stop </td>
           <td>(</td>
           <td class="paramtype">struct <a class="el" href="../../dc/dd6/structeh__connection.html">eh_connection</a> *&nbsp;</td>
-          <td class="paramname"> <em>self</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
+          <td class="paramname"> <em>self</em></td>
+          <td>&nbsp;)&nbsp;</td>
           <td></td>
-          <td class="paramtype">struct ev_loop *&nbsp;</td>
-          <td class="paramname"> <em>loop</em></td><td>&nbsp;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td><td></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="../../d8/db0/eh__connection_8c_source.html#l00268">268</a> of file <a class="el" href="../../d8/db0/eh__connection_8c_source.html">eh_connection.c</a>.</p>
+<p>Definition at line <a class="el" href="../../d8/db0/eh__connection_8c_source.html#l00240">240</a> of file <a class="el" href="../../d8/db0/eh__connection_8c_source.html">eh_connection.c</a>.</p>
 
 </div>
 </div>
@@ -277,7 +267,7 @@ Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const unsigned char *&nbsp;</td>
-          <td class="paramname"> <em>data</em>, </td>
+          <td class="paramname"> <em>buffer</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -293,11 +283,6 @@ Functions</h2></td></tr>
       </table>
 </div>
 <div class="memdoc">
-
-<p>Send some data to the peer. </p>
-<p>First it will try to send straight away, if not everything was written, buffer it and start the write watcher for later delivery </p>
-
-<p>Definition at line <a class="el" href="../../d8/db0/eh__connection_8c_source.html#l00149">149</a> of file <a class="el" href="../../d8/db0/eh__connection_8c_source.html">eh_connection.c</a>.</p>
 
 </div>
 </div>
@@ -317,6 +302,6 @@ Functions</h2></td></tr>
 </div>
 
 <hr class="footer"/><address style="text-align: right;"><small>
-Generated on Tue Nov 23 2010 21:50:39 for libeh by&nbsp;<a href="http://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.png" alt="doxygen"/></a> 1.7.1</small></address>
+Generated on Wed Nov 24 2010 15:00:36 for libeh by&nbsp;<a href="http://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.png" alt="doxygen"/></a> 1.7.1</small></address>
 </body>
 </html>

@@ -97,38 +97,41 @@ var searchBox = new SearchBox("searchBox", "../../search",false,'Search');
 <a name="l00046"></a>00046 <span class="keyword">struct </span><a class="code" href="../../dc/dd6/structeh__connection.html">eh_connection</a>;
 <a name="l00047"></a>00047 
 <a name="l00048"></a><a class="code" href="../../d9/d6e/structeh__connection__cb.html">00048</a> <span class="keyword">struct </span><a class="code" href="../../d9/d6e/structeh__connection__cb.html">eh_connection_cb</a> {
-<a name="l00049"></a><a class="code" href="../../d9/d6e/structeh__connection__cb.html#ad3a33b242f463cc20c204efb3a0cb97c">00049</a>         void (*<a class="code" href="../../d9/d6e/structeh__connection__cb.html#ad3a33b242f463cc20c204efb3a0cb97c">on_read</a>) (<span class="keyword">struct </span><a class="code" href="../../dc/dd6/structeh__connection.html">eh_connection</a> *, <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> *, size_t);
+<a name="l00049"></a><a class="code" href="../../d9/d6e/structeh__connection__cb.html#a2567eb2eec5e0d631d48a10a974145d6">00049</a>         ssize_t (*<a class="code" href="../../d9/d6e/structeh__connection__cb.html#a2567eb2eec5e0d631d48a10a974145d6">on_read</a>) (<span class="keyword">struct </span><a class="code" href="../../dc/dd6/structeh__connection.html">eh_connection</a> *, <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> *, size_t);
 <a name="l00050"></a><a class="code" href="../../d9/d6e/structeh__connection__cb.html#a04336dc808d1b6fd1fdb24f7f34a2711">00050</a>         void (*<a class="code" href="../../d9/d6e/structeh__connection__cb.html#a04336dc808d1b6fd1fdb24f7f34a2711">on_close</a>) (<span class="keyword">struct </span><a class="code" href="../../dc/dd6/structeh__connection.html">eh_connection</a> *);
 <a name="l00051"></a>00051 
-<a name="l00052"></a><a class="code" href="../../d9/d6e/structeh__connection__cb.html#a50a65876fd1794f36bef5bc8bfb60b38">00052</a>         bool (*<a class="code" href="../../d9/d6e/structeh__connection__cb.html#a50a65876fd1794f36bef5bc8bfb60b38">on_error</a>) (<span class="keyword">struct </span><a class="code" href="../../dc/dd6/structeh__connection.html">eh_connection</a> *, <span class="keyword">struct </span>ev_loop *, <span class="keyword">enum</span> eh_connection_error);
+<a name="l00052"></a><a class="code" href="../../d9/d6e/structeh__connection__cb.html#ae9dc23f383777b499f32f8f3e0ce7330">00052</a>         bool (*<a class="code" href="../../d9/d6e/structeh__connection__cb.html#ae9dc23f383777b499f32f8f3e0ce7330">on_error</a>) (<span class="keyword">struct </span><a class="code" href="../../dc/dd6/structeh__connection.html">eh_connection</a> *, <span class="keyword">enum</span> eh_connection_error);
 <a name="l00053"></a>00053 };
 <a name="l00054"></a>00054 
 <a name="l00055"></a><a class="code" href="../../dc/dd6/structeh__connection.html">00055</a> <span class="keyword">struct </span><a class="code" href="../../dc/dd6/structeh__connection.html">eh_connection</a> {
 <a name="l00056"></a><a class="code" href="../../dc/dd6/structeh__connection.html#af3fcfa0e85cb3790c6a40b9578fdc904">00056</a>         ev_io <a class="code" href="../../dc/dd6/structeh__connection.html#af3fcfa0e85cb3790c6a40b9578fdc904">read_watcher</a>;
 <a name="l00057"></a><a class="code" href="../../dc/dd6/structeh__connection.html#a2cae197008dc8da77cb4607dc5980899">00057</a>         ev_io <a class="code" href="../../dc/dd6/structeh__connection.html#a2cae197008dc8da77cb4607dc5980899">write_watcher</a>;
 <a name="l00058"></a>00058 
-<a name="l00059"></a><a class="code" href="../../dc/dd6/structeh__connection.html#a7e446d7f1ff1115c0c3cf2efb71444e0">00059</a>         <span class="keyword">struct </span><a class="code" href="../../d6/db4/structeh__buffer.html">eh_buffer</a> <a class="code" href="../../dc/dd6/structeh__connection.html#a7e446d7f1ff1115c0c3cf2efb71444e0">read_buffer</a>;
-<a name="l00060"></a><a class="code" href="../../dc/dd6/structeh__connection.html#a0ad2ac0f63f59a9e274cbbfe4adc70f6">00060</a>         <span class="keyword">struct </span><a class="code" href="../../d6/db4/structeh__buffer.html">eh_buffer</a> <a class="code" href="../../dc/dd6/structeh__connection.html#a0ad2ac0f63f59a9e274cbbfe4adc70f6">write_buffer</a>;
-<a name="l00061"></a>00061 
-<a name="l00062"></a><a class="code" href="../../dc/dd6/structeh__connection.html#a9bd3c920216b0c9213b27319a9b407fd">00062</a>         <span class="keyword">struct </span><a class="code" href="../../d9/d6e/structeh__connection__cb.html">eh_connection_cb</a> *<a class="code" href="../../dc/dd6/structeh__connection.html#a9bd3c920216b0c9213b27319a9b407fd">cb</a>;
-<a name="l00063"></a>00063 };
-<a name="l00064"></a>00064 
-<a name="l00065"></a>00065 <span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">int</span> eh_connection_fd(<span class="keyword">struct</span> <a class="code" href="../../dc/dd6/structeh__connection.html">eh_connection</a> *<span class="keyword">self</span>)
-<a name="l00066"></a>00066 {
-<a name="l00067"></a>00067         <span class="keywordflow">return</span> <span class="keyword">self</span>-&gt;read_watcher.fd;
-<a name="l00068"></a>00068 }
-<a name="l00069"></a>00069 
-<a name="l00070"></a>00070 <span class="keywordtype">int</span> <a class="code" href="../../d8/db0/eh__connection_8c.html#a493a88bce8bb84064fdfb2961e4d7fa2">eh_connection_init</a>(<span class="keyword">struct</span> <a class="code" href="../../dc/dd6/structeh__connection.html">eh_connection</a> *<span class="keyword">self</span>, <span class="keywordtype">int</span> fd,
-<a name="l00071"></a>00071                        uint8_t *read_buf, <span class="keywordtype">size_t</span> read_buf_size,
-<a name="l00072"></a>00072                        uint8_t *write_buf, <span class="keywordtype">size_t</span> write_buf_size);
-<a name="l00073"></a>00073 <span class="keywordtype">void</span> <a class="code" href="../../d8/db0/eh__connection_8c.html#abe0bded257f380fee2187f09f508bdab">eh_connection_finish</a>(<span class="keyword">struct</span> <a class="code" href="../../dc/dd6/structeh__connection.html">eh_connection</a> *<span class="keyword">self</span>);
-<a name="l00074"></a>00074 
-<a name="l00075"></a>00075 <span class="keywordtype">void</span> <a class="code" href="../../d8/db0/eh__connection_8c.html#a888378141da01d59c33f528f0689aceb">eh_connection_start</a>(<span class="keyword">struct</span> <a class="code" href="../../dc/dd6/structeh__connection.html">eh_connection</a> *<span class="keyword">self</span>, <span class="keyword">struct</span> ev_loop *loop);
-<a name="l00076"></a>00076 <span class="keywordtype">void</span> <a class="code" href="../../d8/db0/eh__connection_8c.html#a4faa1ea33b24f1ecbdb0c028c02884b0">eh_connection_stop</a>(<span class="keyword">struct</span> <a class="code" href="../../dc/dd6/structeh__connection.html">eh_connection</a> *<span class="keyword">self</span>, <span class="keyword">struct</span> ev_loop *loop);
-<a name="l00077"></a>00077 
-<a name="l00078"></a>00078 ssize_t <a class="code" href="../../d8/db0/eh__connection_8c.html#a9fe5cc2c26bdeb83dd94457721e3bee5" title="Send some data to the peer.">eh_connection_write</a>(<span class="keyword">struct</span> <a class="code" href="../../dc/dd6/structeh__connection.html">eh_connection</a> *<span class="keyword">self</span>, <span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> *buffer, <span class="keywordtype">size_t</span> len);
+<a name="l00059"></a><a class="code" href="../../dc/dd6/structeh__connection.html#ab3c984989e9055034e26630108edafb6">00059</a>         <span class="keyword">struct </span>ev_loop *<a class="code" href="../../dc/dd6/structeh__connection.html#ab3c984989e9055034e26630108edafb6">loop</a>;
+<a name="l00060"></a>00060 
+<a name="l00061"></a><a class="code" href="../../dc/dd6/structeh__connection.html#a7e446d7f1ff1115c0c3cf2efb71444e0">00061</a>         <span class="keyword">struct </span><a class="code" href="../../d6/db4/structeh__buffer.html">eh_buffer</a> <a class="code" href="../../dc/dd6/structeh__connection.html#a7e446d7f1ff1115c0c3cf2efb71444e0">read_buffer</a>;
+<a name="l00062"></a><a class="code" href="../../dc/dd6/structeh__connection.html#a0ad2ac0f63f59a9e274cbbfe4adc70f6">00062</a>         <span class="keyword">struct </span><a class="code" href="../../d6/db4/structeh__buffer.html">eh_buffer</a> <a class="code" href="../../dc/dd6/structeh__connection.html#a0ad2ac0f63f59a9e274cbbfe4adc70f6">write_buffer</a>;
+<a name="l00063"></a>00063 
+<a name="l00064"></a><a class="code" href="../../dc/dd6/structeh__connection.html#a9bd3c920216b0c9213b27319a9b407fd">00064</a>         <span class="keyword">struct </span><a class="code" href="../../d9/d6e/structeh__connection__cb.html">eh_connection_cb</a> *<a class="code" href="../../dc/dd6/structeh__connection.html#a9bd3c920216b0c9213b27319a9b407fd">cb</a>;
+<a name="l00065"></a>00065 };
+<a name="l00066"></a>00066 
+<a name="l00067"></a>00067 <span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">int</span> eh_connection_fd(<span class="keyword">struct</span> <a class="code" href="../../dc/dd6/structeh__connection.html">eh_connection</a> *<span class="keyword">self</span>)
+<a name="l00068"></a>00068 {
+<a name="l00069"></a>00069         <span class="keywordflow">return</span> <span class="keyword">self</span>-&gt;read_watcher.fd;
+<a name="l00070"></a>00070 }
+<a name="l00071"></a>00071 
+<a name="l00072"></a>00072 <span class="keywordtype">int</span> <a class="code" href="../../d8/db0/eh__connection_8c.html#a493a88bce8bb84064fdfb2961e4d7fa2">eh_connection_init</a>(<span class="keyword">struct</span> <a class="code" href="../../dc/dd6/structeh__connection.html">eh_connection</a> *<span class="keyword">self</span>, <span class="keywordtype">int</span> fd,
+<a name="l00073"></a>00073                        uint8_t *read_buf, <span class="keywordtype">size_t</span> read_buf_size,
+<a name="l00074"></a>00074                        uint8_t *write_buf, <span class="keywordtype">size_t</span> write_buf_size);
+<a name="l00075"></a>00075 <span class="keywordtype">void</span> <a class="code" href="../../d8/db0/eh__connection_8c.html#abe0bded257f380fee2187f09f508bdab">eh_connection_finish</a>(<span class="keyword">struct</span> <a class="code" href="../../dc/dd6/structeh__connection.html">eh_connection</a> *<span class="keyword">self</span>);
+<a name="l00076"></a>00076 
+<a name="l00077"></a>00077 <span class="keywordtype">void</span> <a class="code" href="../../d8/db0/eh__connection_8c.html#a888378141da01d59c33f528f0689aceb">eh_connection_start</a>(<span class="keyword">struct</span> <a class="code" href="../../dc/dd6/structeh__connection.html">eh_connection</a> *<span class="keyword">self</span>, <span class="keyword">struct</span> ev_loop *loop);
+<a name="l00078"></a>00078 <span class="keywordtype">void</span> <a class="code" href="../../d8/db0/eh__connection_8c.html#ae1fc14dd9a02dfa6c677cfcb0963c41b">eh_connection_stop</a>(<span class="keyword">struct</span> <a class="code" href="../../dc/dd6/structeh__connection.html">eh_connection</a> *<span class="keyword">self</span>);
 <a name="l00079"></a>00079 
-<a name="l00080"></a>00080 <span class="preprocessor">#endif </span><span class="comment">/* !_EH_CONNECTION_H */</span>
+<a name="l00080"></a>00080 ssize_t <a class="code" href="../../d8/db0/eh__connection_8c.html#a79b2cba8633573d6df0375811aac8d72" title="Send some data to the peer.">eh_connection_write</a>(<span class="keyword">struct</span> <a class="code" href="../../dc/dd6/structeh__connection.html">eh_connection</a> *<span class="keyword">self</span>, <span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> *buffer,
+<a name="l00081"></a>00081                             <span class="keywordtype">size_t</span> len);
+<a name="l00082"></a>00082 
+<a name="l00083"></a>00083 <span class="preprocessor">#endif </span><span class="comment">/* !_EH_CONNECTION_H */</span>
 </pre></div></div>
 </div>
 <!--- window showing the filter options -->
@@ -146,6 +149,6 @@ var searchBox = new SearchBox("searchBox", "../../search",false,'Search');
 </div>
 
 <hr class="footer"/><address style="text-align: right;"><small>
-Generated on Tue Nov 23 2010 21:50:38 for libeh by&nbsp;<a href="http://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.png" alt="doxygen"/></a> 1.7.1</small></address>
+Generated on Wed Nov 24 2010 15:00:36 for libeh by&nbsp;<a href="http://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.png" alt="doxygen"/></a> 1.7.1</small></address>
 </body>
 </html>

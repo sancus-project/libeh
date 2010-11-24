@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
-<title>libeh: eh_connection_cb Struct Reference</title>
+<title>libeh: eh_list Struct Reference</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <link href="../../search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javaScript" src="../../search/search.js"></script>
@@ -49,71 +49,72 @@ var searchBox = new SearchBox("searchBox", "../../search",false,'Search');
   <div class="summary">
 <a href="#pub-attribs">Public Attributes</a>  </div>
   <div class="headertitle">
-<h1>eh_connection_cb Struct Reference</h1>  </div>
+<h1>eh_list Struct Reference</h1>  </div>
 </div>
 <div class="contents">
-<!-- doxytag: class="eh_connection_cb" -->
-<p><code>#include &lt;<a class="el" href="../../db/d45/eh__connection_8h_source.html">eh_connection.h</a>&gt;</code></p>
+<!-- doxytag: class="eh_list" -->
+<p>Double linked list.  
+<a href="#_details">More...</a></p>
 
-<p><a href="../../d5/d7f/structeh__connection__cb-members.html">List of all members.</a></p>
+<p><code>#include &lt;<a class="el" href="../../db/d2c/eh__list_8h_source.html">eh_list.h</a>&gt;</code></p>
+<div class="dynheader">
+Collaboration diagram for eh_list:</div>
+<div class="dyncontent">
+<div class="center"><img src="../../d3/d98/structeh__list__coll__graph.png" border="0" usemap="#eh__list_coll__map" alt="Collaboration graph"/></div>
+<map name="eh__list_coll__map" id="eh__list_coll__map">
+</map>
+<center><span class="legend">[<a href="../../graph_legend.html">legend</a>]</span></center></div>
+
+<p><a href="../../de/d27/structeh__list-members.html">List of all members.</a></p>
 <table class="memberdecls">
 <tr><td colspan="2"><h2><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">ssize_t(*&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/d6e/structeh__connection__cb.html#a2567eb2eec5e0d631d48a10a974145d6">on_read</a> )(struct <a class="el" href="../../dc/dd6/structeh__connection.html">eh_connection</a> *, unsigned char *, size_t)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void(*&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/d6e/structeh__connection__cb.html#a04336dc808d1b6fd1fdb24f7f34a2711">on_close</a> )(struct <a class="el" href="../../dc/dd6/structeh__connection.html">eh_connection</a> *)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">bool(*&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/d6e/structeh__connection__cb.html#ae9dc23f383777b499f32f8f3e0ce7330">on_error</a> )(struct <a class="el" href="../../dc/dd6/structeh__connection.html">eh_connection</a> *, enum <a class="el" href="../../db/d45/eh__connection_8h.html#a8b3372efd35bc8b26c761506d0863a6f">eh_connection_error</a>)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="../../da/df9/structeh__list.html">eh_list</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/df9/structeh__list.html#a2da46708b136e29a698383ff90ca23e3">prev</a></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">previous element on the list  <a href="#a2da46708b136e29a698383ff90ca23e3"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="../../da/df9/structeh__list.html">eh_list</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/df9/structeh__list.html#a7f058c49153ce4fe0870755a1e8deee1">next</a></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">next element on the list  <a href="#a7f058c49153ce4fe0870755a1e8deee1"></a><br/></td></tr>
 </table>
 <hr/><a name="_details"></a><h2>Detailed Description</h2>
+<p>Double linked list. </p>
 
-<p>Definition at line <a class="el" href="../../db/d45/eh__connection_8h_source.html#l00048">48</a> of file <a class="el" href="../../db/d45/eh__connection_8h_source.html">eh_connection.h</a>.</p>
+<p>Definition at line <a class="el" href="../../db/d2c/eh__list_8h_source.html#l00034">34</a> of file <a class="el" href="../../db/d2c/eh__list_8h_source.html">eh_list.h</a>.</p>
 <hr/><h2>Member Data Documentation</h2>
-<a class="anchor" id="a04336dc808d1b6fd1fdb24f7f34a2711"></a><!-- doxytag: member="eh_connection_cb::on_close" ref="a04336dc808d1b6fd1fdb24f7f34a2711" args=")(struct eh_connection *)" -->
+<a class="anchor" id="a7f058c49153ce4fe0870755a1e8deee1"></a><!-- doxytag: member="eh_list::next" ref="a7f058c49153ce4fe0870755a1e8deee1" args="" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void(* <a class="el" href="../../d9/d6e/structeh__connection__cb.html#a04336dc808d1b6fd1fdb24f7f34a2711">eh_connection_cb::on_close</a>)(struct <a class="el" href="../../dc/dd6/structeh__connection.html">eh_connection</a> *)</td>
+          <td class="memname">struct <a class="el" href="../../da/df9/structeh__list.html">eh_list</a>* <a class="el" href="../../da/df9/structeh__list.html#a7f058c49153ce4fe0870755a1e8deee1">eh_list::next</a></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="../../db/d45/eh__connection_8h_source.html#l00050">50</a> of file <a class="el" href="../../db/d45/eh__connection_8h_source.html">eh_connection.h</a>.</p>
+<p>next element on the list </p>
+
+<p>Definition at line <a class="el" href="../../db/d2c/eh__list_8h_source.html#l00036">36</a> of file <a class="el" href="../../db/d2c/eh__list_8h_source.html">eh_list.h</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="ae9dc23f383777b499f32f8f3e0ce7330"></a><!-- doxytag: member="eh_connection_cb::on_error" ref="ae9dc23f383777b499f32f8f3e0ce7330" args=")(struct eh_connection *, enum eh_connection_error)" -->
+<a class="anchor" id="a2da46708b136e29a698383ff90ca23e3"></a><!-- doxytag: member="eh_list::prev" ref="a2da46708b136e29a698383ff90ca23e3" args="" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool(* <a class="el" href="../../d9/d6e/structeh__connection__cb.html#ae9dc23f383777b499f32f8f3e0ce7330">eh_connection_cb::on_error</a>)(struct <a class="el" href="../../dc/dd6/structeh__connection.html">eh_connection</a> *, enum <a class="el" href="../../db/d45/eh__connection_8h.html#a8b3372efd35bc8b26c761506d0863a6f">eh_connection_error</a>)</td>
+          <td class="memname">struct <a class="el" href="../../da/df9/structeh__list.html">eh_list</a>* <a class="el" href="../../da/df9/structeh__list.html#a2da46708b136e29a698383ff90ca23e3">eh_list::prev</a></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="../../db/d45/eh__connection_8h_source.html#l00052">52</a> of file <a class="el" href="../../db/d45/eh__connection_8h_source.html">eh_connection.h</a>.</p>
+<p>previous element on the list </p>
 
-</div>
-</div>
-<a class="anchor" id="a2567eb2eec5e0d631d48a10a974145d6"></a><!-- doxytag: member="eh_connection_cb::on_read" ref="a2567eb2eec5e0d631d48a10a974145d6" args=")(struct eh_connection *, unsigned char *, size_t)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">ssize_t(* <a class="el" href="../../d9/d6e/structeh__connection__cb.html#a2567eb2eec5e0d631d48a10a974145d6">eh_connection_cb::on_read</a>)(struct <a class="el" href="../../dc/dd6/structeh__connection.html">eh_connection</a> *, unsigned char *, size_t)</td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="../../db/d45/eh__connection_8h_source.html#l00049">49</a> of file <a class="el" href="../../db/d45/eh__connection_8h_source.html">eh_connection.h</a>.</p>
+<p>Definition at line <a class="el" href="../../db/d2c/eh__list_8h_source.html#l00035">35</a> of file <a class="el" href="../../db/d2c/eh__list_8h_source.html">eh_list.h</a>.</p>
 
 </div>
 </div>
 <hr/>The documentation for this struct was generated from the following file:<ul>
-<li><a class="el" href="../../db/d45/eh__connection_8h_source.html">eh_connection.h</a></li>
+<li><a class="el" href="../../db/d2c/eh__list_8h_source.html">eh_list.h</a></li>
 </ul>
 </div>
 <!--- window showing the filter options -->
