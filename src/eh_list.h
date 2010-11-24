@@ -72,11 +72,6 @@ static inline void __eh_list_del(struct eh_list *prev, struct eh_list *next)
 	next->prev = prev;
 	prev->next = next;
 }
-
-/** Removes an element from a list */
-#define eh_list_del(S) do { \
-	if ((S)->prev != (S)) \
-		__eh_list_del((S)->prev, (S)->next); \
-} while(0)
+#define eh_list_del(S)	__eh_list_del((S)->prev, (S)->next)
 
 #endif /* !_EH_LIST_H */
