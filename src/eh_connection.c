@@ -44,13 +44,11 @@
 static void read_callback(struct ev_loop *loop, ev_io *w, int revents)
 {
 	struct eh_connection *self = w->data;
-	struct eh_connection_cb *cb;
+	struct eh_connection_cb *cb = self->cb;
 
 	assert(self != NULL);
 	assert(self->cb != NULL);
 	assert(self->loop == loop);
-
-	cb = self->cb;
 
 	if (revents & EV_READ) {
 		struct eh_buffer *buf = &self->read_buffer;
@@ -107,11 +105,9 @@ terminate:
 static void write_callback(struct ev_loop *loop, ev_io *w, int revents)
 {
 	struct eh_connection *self = w->data;
-	struct eh_connection_cb *cb;
+	struct eh_connection_cb *cb = self->cb;
 
-	assert(self != NULL);
 	assert(self->cb != NULL);
-	cb = self->cb;
 
 	if (revents & EV_WRITE) {
 		ssize_t wc;
@@ -156,18 +152,15 @@ terminate:
  */
 ssize_t eh_connection_write(struct eh_connection *self, const uint8_t *data, size_t len)
 {
-	struct eh_buffer *buffer;
-	struct eh_connection_cb *cb;
+	struct eh_buffer *buffer = &self->write_buffer;
+	struct eh_connection_cb *cb = self->cb;
 
-	assert(self != NULL);
 	assert(self->cb != NULL);
 	assert(data != NULL || len == 0);
 
 	if (len == 0)
 		return 0;
 
-	buffer = &self->write_buffer;
-	cb = self->cb;
 try_append:
 	if (eh_buffer_append(buffer, data, len) < 0) {
 		bool close = true;
@@ -191,7 +184,6 @@ int eh_connection_init(struct eh_connection *self, int fd,
 		       uint8_t *read_buf, size_t read_buf_size,
 		       uint8_t *write_buf, size_t write_buf_size)
 {
-	assert(self != NULL);
 	assert(fd >= 0);
 
 	eh_buffer_init(&self->read_buffer, read_buf, read_buf_size);
@@ -204,14 +196,11 @@ int eh_connection_init(struct eh_connection *self, int fd,
 
 void eh_connection_finish(struct eh_connection *self)
 {
-	struct eh_connection_cb *cb;
+	struct eh_connection_cb *cb = self->cb;
 
-	assert(self != NULL);
 	assert(self->cb != NULL);
 	assert(!eh_io_active(&self->read_watcher));
 	assert(!eh_io_active(&self->write_watcher));
-
-	cb = self->cb;
 
 	close(self->read_watcher.fd);
 
@@ -222,7 +211,6 @@ void eh_connection_finish(struct eh_connection *self)
 
 void eh_connection_start(struct eh_connection *self, struct ev_loop *loop)
 {
-	assert(self != NULL);
 	assert(loop != NULL || self->loop != NULL);
 
 	if (loop)
@@ -239,7 +227,6 @@ void eh_connection_start(struct eh_connection *self, struct ev_loop *loop)
 
 void eh_connection_stop(struct eh_connection *self)
 {
-	assert(self != NULL);
 	assert(self->loop != NULL);
 
 	if (eh_io_active(&self->read_watcher))
