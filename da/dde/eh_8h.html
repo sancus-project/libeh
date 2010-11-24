@@ -66,8 +66,44 @@ This graph shows which files directly or indirectly include this file:</div>
 Defines</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/dde/eh_8h.html#a86d500a34c624c2cae56bc25a31b12f3">UNUSED</a>(x)&nbsp;&nbsp;&nbsp;x</td></tr>
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Marks argument as unused to make gcc happy.  <a href="#a86d500a34c624c2cae56bc25a31b12f3"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/dde/eh_8h.html#a5f921da3b228046c9690b7ac8333cf08">container_of</a>(P, T, M)&nbsp;&nbsp;&nbsp;(T *)((char *)(P) - offsetof(T, M))</td></tr>
 </table>
 <hr/><h2>Define Documentation</h2>
+<a class="anchor" id="a5f921da3b228046c9690b7ac8333cf08"></a><!-- doxytag: member="eh.h::container_of" ref="a5f921da3b228046c9690b7ac8333cf08" args="(P, T, M)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define container_of</td>
+          <td>(</td>
+          <td class="paramtype">&nbsp;</td>
+          <td class="paramname">P, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&nbsp;</td>
+          <td class="paramname">T, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&nbsp;</td>
+          <td class="paramname">M</td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td>&nbsp;&nbsp;&nbsp;(T *)((char *)(P) - offsetof(T, M))</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Definition at line <a class="el" href="../../da/dde/eh_8h_source.html#l00048">48</a> of file <a class="el" href="../../da/dde/eh_8h_source.html">eh.h</a>.</p>
+
+</div>
+</div>
 <a class="anchor" id="a86d500a34c624c2cae56bc25a31b12f3"></a><!-- doxytag: member="eh.h::UNUSED" ref="a86d500a34c624c2cae56bc25a31b12f3" args="(x)" -->
 <div class="memitem">
 <div class="memproto">
@@ -107,6 +143,6 @@ Defines</h2></td></tr>
 </div>
 
 <hr class="footer"/><address style="text-align: right;"><small>
-Generated on Wed Nov 24 2010 15:00:36 for libeh by&nbsp;<a href="http://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.png" alt="doxygen"/></a> 1.7.1</small></address>
+Generated on Wed Nov 24 2010 19:27:36 for libeh by&nbsp;<a href="http://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.png" alt="doxygen"/></a> 1.7.1</small></address>
 </body>
 </html>

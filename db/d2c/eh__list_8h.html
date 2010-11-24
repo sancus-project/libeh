@@ -66,8 +66,8 @@ Defines</h2></td></tr>
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Insert element at the begining of a list.  <a href="#a6422461f423a985ad240d558df3cbb4c"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d2c/eh__list_8h.html#a8d575c5d168621301d2255e0b06706c4">eh_list_append</a>(H, N)&nbsp;&nbsp;&nbsp;eh_list_inject(N, (H)-&gt;prev, (H))</td></tr>
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Insert element at the end of a list.  <a href="#a8d575c5d168621301d2255e0b06706c4"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d2c/eh__list_8h.html#af97f1565f41e9f8b3b182e53370153a5">eh_list_del</a>(S)</td></tr>
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Removes an element from a list.  <a href="#af97f1565f41e9f8b3b182e53370153a5"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d2c/eh__list_8h.html#af97f1565f41e9f8b3b182e53370153a5">eh_list_del</a>(S)&nbsp;&nbsp;&nbsp;__eh_list_del((S)-&gt;prev, (S)-&gt;next)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d2c/eh__list_8h.html#af5794b134c3c60d920019f3f25580cfd">eh_list_foreach</a>(H, I)&nbsp;&nbsp;&nbsp;for(struct <a class="el" href="../../da/df9/structeh__list.html">eh_list</a> *I = (H)-&gt;next; I != (H); I = (I)-&gt;next)</td></tr>
 </table>
 <hr/><h2>Define Documentation</h2>
 <a class="anchor" id="a8d575c5d168621301d2255e0b06706c4"></a><!-- doxytag: member="eh_list.h::eh_list_append" ref="a8d575c5d168621301d2255e0b06706c4" args="(H, N)" -->
@@ -118,17 +118,40 @@ Defines</h2></td></tr>
           <td class="paramtype">&nbsp;</td>
           <td class="paramname">S</td>
           <td>&nbsp;)&nbsp;</td>
-          <td></td>
+          <td>&nbsp;&nbsp;&nbsp;__eh_list_del((S)-&gt;prev, (S)-&gt;next)</td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
-<b>Value:</b><div class="fragment"><pre class="fragment"><span class="keywordflow">do</span> { \
-        <span class="keywordflow">if</span> ((S)-&gt;prev != (S)) \
-                __eh_list_del((S)-&gt;prev, (S)-&gt;next); \
-} <span class="keywordflow">while</span>(0)
-</pre></div>
-<p>Removes an element from a list. </p>
+
+<p>Definition at line <a class="el" href="../../db/d2c/eh__list_8h_source.html#l00075">75</a> of file <a class="el" href="../../db/d2c/eh__list_8h_source.html">eh_list.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="af5794b134c3c60d920019f3f25580cfd"></a><!-- doxytag: member="eh_list.h::eh_list_foreach" ref="af5794b134c3c60d920019f3f25580cfd" args="(H, I)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define eh_list_foreach</td>
+          <td>(</td>
+          <td class="paramtype">&nbsp;</td>
+          <td class="paramname">H, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&nbsp;</td>
+          <td class="paramname">I</td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td>&nbsp;&nbsp;&nbsp;for(struct <a class="el" href="../../da/df9/structeh__list.html">eh_list</a> *I = (H)-&gt;next; I != (H); I = (I)-&gt;next)</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
 
 <p>Definition at line <a class="el" href="../../db/d2c/eh__list_8h_source.html#l00077">77</a> of file <a class="el" href="../../db/d2c/eh__list_8h_source.html">eh_list.h</a>.</p>
 
@@ -188,6 +211,6 @@ Defines</h2></td></tr>
 </div>
 
 <hr class="footer"/><address style="text-align: right;"><small>
-Generated on Wed Nov 24 2010 15:00:36 for libeh by&nbsp;<a href="http://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.png" alt="doxygen"/></a> 1.7.1</small></address>
+Generated on Wed Nov 24 2010 19:27:36 for libeh by&nbsp;<a href="http://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.png" alt="doxygen"/></a> 1.7.1</small></address>
 </body>
 </html>
