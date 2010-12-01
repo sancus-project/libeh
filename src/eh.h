@@ -48,4 +48,8 @@
 #define container_of(P,T,M)	(T *)((char *)(P) - offsetof(T, M))
 #endif
 
+#ifndef ELEMENTS
+#define ELEMENTS(A)	(sizeof(A)/sizeof((A)[0]))
+#endif
+
 #endif /* !_EH_H */
