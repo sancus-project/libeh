@@ -44,10 +44,12 @@
 #	define UNUSED(x) x
 #endif
 
+/** Reference to the structure based on the address of one of it's components */
 #ifndef container_of
 #define container_of(P,T,M)	(T *)((char *)(P) - offsetof(T, M))
 #endif
 
+/** Number of elements of an array */
 #ifndef ELEMENTS
 #define ELEMENTS(A)	(sizeof(A)/sizeof((A)[0]))
 #endif
