@@ -30,7 +30,49 @@
 #define _EH_FD_H
 
 #include <errno.h>
+
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+
 #include <unistd.h>
+
+static inline int eh_open(const char *pathname, int flags, int cloexec, mode_t mode)
+{
+	int fd;
+#ifdef O_CLOEXEC
+	if (cloexec)
+		flags |= O_CLOEXEC;
+	else
+		flags &= ~O_CLOEXEC;
+#endif
+try_open:
+	if ((fd = open(pathname, flags, mode)) < 0) {
+		if (errno == EINTR)
+			goto try_open;
+		else
+			goto open_done;
+	}
+
+	if (cloexec) {
+		int fl = fcntl(fd, F_GETFL);
+		if (fl < 0)
+			goto open_failed;
+#ifdef O_CLOEXEC
+		if ((fl & FD_CLOEXEC) == 0)
+#endif
+			if (fcntl(fd, F_SETFL, fl|FD_CLOEXEC) < 0) {
+				goto open_failed;
+			}
+		goto open_done;
+	}
+
+open_failed:
+	close(fd);
+	fd = -1;
+open_done:
+	return fd;
+}
 
 static inline int eh_close(int *fd)
 {
