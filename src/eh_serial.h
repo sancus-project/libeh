@@ -48,19 +48,12 @@ int eh_serial_close(struct eh_serial *);
 
 int eh_serial_apply(struct eh_serial *, struct termios *);
 
-static inline int eh_serial_flush(struct eh_serial *self)
-{
-	return tcflush(self->fd, TCIFLUSH);
-}
+/** drops unread and unwritten data from a wire */
+#define eh_serial_flush(S)	tcflush((S)->fd, TCIOFLUSH)
 
-static inline int eh_serial_fd(struct eh_serial *self)
-{
-	return self->fd;
-}
-
-static inline const char *eh_serial_devname(struct eh_serial *self)
-{
-	return self->devname;
-}
+/** returns the fd of an eh_serial */
+#define eh_serial_fd(S)		((S)->fd)
+/** returns the devname of an eh_serial */
+#define eh_serial_devname(S)	((S)->devname)
 
 #endif /* !_EH_SERIAL_H */
