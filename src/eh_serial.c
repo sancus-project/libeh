@@ -99,7 +99,6 @@ int eh_serial_close(struct eh_serial *self)
 	ret = eh_serial_apply(self, &self->oldtio);
 	orig_errno = errno;
 
-	close(self->fd);
 	eh_close(&self->fd);
 
 	errno = orig_errno;
