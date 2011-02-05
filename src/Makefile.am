@@ -7,5 +7,6 @@ libeh_la_SOURCES = \
 	eh_socket.c
 
 include_HEADERS = \
-	eh.h eh_buffer.h eh_connection.h eh_fd.h eh_list.h eh_log.h \
-	eh_serial.h eh_server.h eh_socket.h eh_watcher.h
+	eh.h eh_alloc.h eh_buffer.h eh_connection.h eh_fd.h \
+	eh_list.h eh_log.h eh_serial.h eh_server.h eh_socket.h \
+	eh_watcher.h
