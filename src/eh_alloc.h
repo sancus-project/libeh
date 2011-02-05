@@ -36,11 +36,6 @@ static inline void *eh_zalloc(size_t size)
 	return calloc(1, size);
 }
 
-static inline void eh_free(void **ptr)
-{
-	free(*ptr);
-	*ptr = NULL;
-}
-#define eh_free(P)	eh_free((void **)(P))
+#define eh_free(P)	do { free(P); (P) = NULL; } while(0)
 
 #endif
