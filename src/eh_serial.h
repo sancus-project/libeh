@@ -48,6 +48,24 @@ int eh_serial_close(struct eh_serial *);
 
 int eh_serial_apply(struct eh_serial *, struct termios *);
 
+/** setup a termios structure to be used as 8N1 serial port
+ *
+ * @param tio		termios structure to alter
+ * @param baudrate	Bnnn value representing the speed of the channel. 0 for skipping.
+ */
+static inline void eh_serial_setup_8N1(struct termios *tio, speed_t baudrate)
+{
+	tio->c_cflag |= (CLOCAL|CREAD);
+
+	tio->c_cflag &= ~(CSIZE|PARENB|CSTOPB);
+	tio->c_cflag |= CS8;
+
+	if (baudrate) {
+		cfsetispeed(tio, baudrate);
+		cfsetospeed(tio, baudrate);
+	}
+}
+
 /** drops unread and unwritten data from a wire */
 #define eh_serial_flush(S)	tcflush((S)->fd, TCIOFLUSH)
 
