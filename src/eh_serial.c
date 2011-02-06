@@ -50,7 +50,7 @@ int eh_serial_open(struct eh_serial *self, const char *devname,
 	memcpy(self->devname, devname, l);
 	self->devname[l] = '\0';
 
-	if ((self->fd = eh_open(self->devname, O_RDWR|O_NOCTTY, cloexec, 0)) < 0)
+	if ((self->fd = eh_open(self->devname, O_RDWR|O_NOCTTY|O_NONBLOCK, cloexec, 0)) < 0)
 		goto init_done;
 	else if (tcgetattr(self->fd, &self->oldtio) < 0)
 		goto init_fail;
