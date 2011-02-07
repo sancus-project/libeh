@@ -73,6 +73,9 @@ int eh_serial_apply(struct eh_serial *self, struct termios *tio)
 	assert(tio != NULL);
 	assert(self->fd >= 0);
 
+	/* pre-initialize in case tcgetattr() doesn't really touch all bytes */
+	memcpy(&newtio, tio, sizeof(newtio));
+
 	/* TERMIOS(3):
 	 * Note that tcsetattr() returns success if any of the requested changes could be successfully
 	 * carried out.  Therefore, when making multiple changes it may be necessary to follow this call
