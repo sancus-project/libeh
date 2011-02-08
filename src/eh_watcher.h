@@ -37,12 +37,6 @@
 #include <ev.h>
 #include <stdbool.h>
 
-enum eh_io_event {
-	EH_READ = EV_READ,
-	EH_WRITE = EV_WRITE,
-	EH_RW = EV_READ|EV_WRITE
-};
-
 #define eh_watcher_set_priority(W,P)	do { \
 	(W)->priority = (P); \
 } while(0)
@@ -61,6 +55,15 @@ enum eh_io_event {
 	eh_watcher_set_cb((W), CB); \
 } while(0)
 
+/*
+ * ev_io
+ */
+enum eh_io_event {
+	EH_READ = EV_READ,
+	EH_WRITE = EV_WRITE,
+	EH_RW = EV_READ|EV_WRITE
+};
+
 static inline void eh_io_init(ev_io *w, void (*cb) (struct ev_loop *, ev_io *, int),
 			      void *data, int fd, enum eh_io_event event)
 {
@@ -74,6 +77,12 @@ static inline bool eh_io_active(ev_io *w)
 	return ev_is_active(w);
 }
 
+#define eh_io_start(W, L)	ev_io_start(L, W)
+#define eh_io_stop(W, L)	ev_io_stop(L, W)
+
+/*
+ * ev_signal
+ */
 static inline void eh_signal_init(ev_signal *w, void (*cb) (struct ev_loop *, ev_signal *, int),
 			      void *data, int signo)
 {
