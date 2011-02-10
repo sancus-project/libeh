@@ -94,4 +94,18 @@ static inline void eh_signal_init(ev_signal *w, void (*cb) (struct ev_loop *, ev
 #define eh_signal_start(W, L)	ev_signal_start(L, W)
 #define eh_signal_stop(W, L)	ev_signal_stop(L, W)
 
+/*
+ * ev_timer
+ */
+static inline void eh_timer_init(ev_timer *w, void (*cb) (struct ev_loop *, ev_timer *, int),
+				 void *data, float after, float repeat)
+{
+	eh_watcher_init(w, cb);
+	ev_timer_set(w, after, repeat);
+	eh_watcher_set_data(w, data);
+}
+
+#define eh_timer_start(W, L)	ev_timer_start(L, W)
+#define eh_timer_stop(W, L)	ev_timer_stop(L, W)
+
 #endif /* !_EH_WATCHER_H */
