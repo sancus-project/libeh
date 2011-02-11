@@ -52,6 +52,7 @@ static void read_callback(struct ev_loop *loop, ev_io *w, int revents)
 
 	if (revents & EV_READ) {
 		struct eh_buffer *buf = &self->read_buffer;
+		bool eof = false;
 		ssize_t l;
 
 		if (eh_buffer_free(buf) == 0) {
@@ -63,7 +64,7 @@ static void read_callback(struct ev_loop *loop, ev_io *w, int revents)
 		}
 
 try_read:
-		l = eh_buffer_read(buf, w->fd);
+		l = eh_buffer_read(buf, w->fd, &eof);
 
 		if (l == 0) { /* EOF */
 			goto terminate;

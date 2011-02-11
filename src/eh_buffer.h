@@ -31,6 +31,7 @@
 
 #include <string.h>	/* memmove() */
 #include <stdint.h>	/* uint8_t */
+#include <stdbool.h>	/* bool */
 #include <sys/types.h>	/* size_t */
 
 struct eh_buffer {
@@ -43,7 +44,7 @@ struct eh_buffer {
 
 ssize_t eh_buffer_init(struct eh_buffer *self, uint8_t *buf, size_t size);
 
-ssize_t eh_buffer_read(struct eh_buffer *self, int fd);
+ssize_t eh_buffer_read(struct eh_buffer *self, int fd, bool *eof);
 ssize_t eh_buffer_write(struct eh_buffer *self, int fd);
 
 #define eh_buffer_data(B)	((B)->buf + (B)->base)

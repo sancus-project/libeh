@@ -73,7 +73,7 @@ ssize_t eh_buffer_init(struct eh_buffer *self, uint8_t *buf, size_t size)
 }
 
 /** Reads from a fd into a buffer */
-ssize_t eh_buffer_read(struct eh_buffer *self, int fd)
+ssize_t eh_buffer_read(struct eh_buffer *self, int fd, bool *eof)
 {
 	ssize_t l;
 	assert(self != NULL);
@@ -93,10 +93,9 @@ ssize_t eh_buffer_read(struct eh_buffer *self, int fd)
 	l = read(fd, eh_buffer_next(self), eh_buffer_freetail(self));
 	if (l > 0)
 		self->len += l;
-#if 0
 	else if (l == 0)
-		return EOF; /* how? */
-#endif
+		*eof = true;
+
 	return l;
 }
 
