@@ -35,14 +35,14 @@
 #include <sys/types.h>	/* size_t */
 
 struct eh_buffer {
-	uint8_t *buf;
+	char *buf;
 
 	uint_fast16_t base;
 	uint_fast16_t len;
 	uint_fast16_t size;
 };
 
-ssize_t eh_buffer_init(struct eh_buffer *self, uint8_t *buf, size_t size);
+ssize_t eh_buffer_init(struct eh_buffer *self, char *buf, size_t size);
 
 ssize_t eh_buffer_read(struct eh_buffer *self, int fd, bool *eof);
 ssize_t eh_buffer_write(struct eh_buffer *self, int fd);
@@ -61,7 +61,7 @@ static inline void eh_buffer_reset(struct eh_buffer *self)
 	self->base = self->len = 0;
 }
 
-ssize_t eh_buffer_append(struct eh_buffer *self, const uint8_t *data, size_t len);
+ssize_t eh_buffer_append(struct eh_buffer *self, const char *data, size_t len);
 ssize_t eh_buffer_appendz(struct eh_buffer *self, const char *str);
 
 #endif

@@ -62,7 +62,7 @@ void eh_buffer_skip(struct eh_buffer *self, size_t bytes)
 /**
  * \brief Initializes a buffer using an externally provided chunk of memory.
  */
-ssize_t eh_buffer_init(struct eh_buffer *self, uint8_t *buf, size_t size)
+ssize_t eh_buffer_init(struct eh_buffer *self, char *buf, size_t size)
 {
 	assert(self != NULL);
 	assert((size == 0 && buf == NULL) || (size > 0 && buf != NULL));
@@ -126,7 +126,7 @@ ssize_t eh_buffer_write(struct eh_buffer *self, int fd)
 	return l;
 }
 
-ssize_t eh_buffer_append(struct eh_buffer *self, const uint8_t *data, size_t len)
+ssize_t eh_buffer_append(struct eh_buffer *self, const char *data, size_t len)
 {
 	assert(self != NULL);
 	assert(data != NULL || len == 0);
@@ -151,5 +151,5 @@ ssize_t eh_buffer_appendz(struct eh_buffer *self, const char *str)
 {
 	assert(str != NULL);
 
-	return eh_buffer_append(self, (const uint8_t *)str, strlen(str));
+	return eh_buffer_append(self, str, strlen(str));
 }

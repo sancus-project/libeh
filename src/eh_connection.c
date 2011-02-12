@@ -151,7 +151,7 @@ terminate:
  *
  * For now it only appends to the buffer and starts the write watcher
  */
-ssize_t eh_connection_write(struct eh_connection *self, const uint8_t *data, size_t len)
+ssize_t eh_connection_write(struct eh_connection *self, const char *data, size_t len)
 {
 	struct eh_buffer *buffer = &self->write_buffer;
 	struct eh_connection_cb *cb = self->cb;
@@ -182,8 +182,8 @@ try_append:
 
 /* exported */
 int eh_connection_init(struct eh_connection *self, int fd,
-		       uint8_t *read_buf, size_t read_buf_size,
-		       uint8_t *write_buf, size_t write_buf_size)
+		       char *read_buf, size_t read_buf_size,
+		       char *write_buf, size_t write_buf_size)
 {
 	assert(fd >= 0);
 

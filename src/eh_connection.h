@@ -46,7 +46,7 @@ enum eh_connection_error {
 struct eh_connection;
 
 struct eh_connection_cb {
-	ssize_t (*on_read) (struct eh_connection *, unsigned char *, size_t);
+	ssize_t (*on_read) (struct eh_connection *, char *, size_t);
 	void (*on_close) (struct eh_connection *);
 
 	bool (*on_error) (struct eh_connection *, enum eh_connection_error);
@@ -70,14 +70,14 @@ static inline int eh_connection_fd(struct eh_connection *self)
 }
 
 int eh_connection_init(struct eh_connection *self, int fd,
-		       uint8_t *read_buf, size_t read_buf_size,
-		       uint8_t *write_buf, size_t write_buf_size);
+		       char *read_buf, size_t read_buf_size,
+		       char *write_buf, size_t write_buf_size);
 void eh_connection_finish(struct eh_connection *self);
 
 void eh_connection_start(struct eh_connection *self, struct ev_loop *loop);
 void eh_connection_stop(struct eh_connection *self);
 
-ssize_t eh_connection_write(struct eh_connection *self, const unsigned char *buffer,
+ssize_t eh_connection_write(struct eh_connection *self, const char *buffer,
 			    size_t len);
 
 #endif /* !_EH_CONNECTION_H */
