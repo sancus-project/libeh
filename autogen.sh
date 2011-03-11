@@ -1,3 +1,3 @@
 #!/bin/sh
 
-exec autoreconf -ivs
+exec autoreconf -ivs "${0%/*}"
