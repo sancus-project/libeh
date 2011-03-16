@@ -26,15 +26,17 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#include "eh_socket.h"
-#include "eh.h"
 
-#include <arpa/inet.h>
 #include <stdlib.h>
-#include <errno.h>
-
-#include <string.h>
 #include <stdio.h>
+#include <errno.h>
+#include <string.h>
+
+#include <sys/socket.h>
+#include <arpa/inet.h>
+
+#include "eh.h"
+#include "eh_socket.h"
 
 static inline ssize_t eh_socket_ntop_ipv4(char *str, size_t size, const struct sockaddr_in *sin)
 {

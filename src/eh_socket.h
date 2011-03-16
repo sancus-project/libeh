@@ -29,8 +29,6 @@
 #ifndef _EH_SOCKET_H
 #define _EH_SOCKET_H
 
-#include <sys/socket.h>
-
 ssize_t eh_socket_ntop(char *dst, size_t dst_len, const struct sockaddr *sa, socklen_t sa_len);
 
 #endif /* !_EH_SOCKET_H */
