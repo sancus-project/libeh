@@ -5,6 +5,7 @@ list() {
 		sed -e 's,|$,,' -e 's,|, \\\n\t,g'
 }
 
+cd "${0%/*}"
 cat <<EOT | tee Makefile.am
 AM_CFLAGS = \$(CWARNFLAGS)
 
