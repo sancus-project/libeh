@@ -26,9 +26,13 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
+#include <sys/socket.h>
+
+#include "eh.h"
+#include "eh_connection.h"
 #include "eh_server.h"
 #include "eh_watcher.h"
-#include "eh.h"
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

@@ -29,10 +29,6 @@
 #ifndef _EH_SERVER_H
 #define _EH_SERVER_H
 
-#include <sys/socket.h>
-
-#include <eh_connection.h>
-
 enum eh_server_error {
 	EH_SERVER_ACCEPT_ERROR,
 	EH_SERVER_WATCHER_ERROR,
