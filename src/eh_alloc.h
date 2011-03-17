@@ -29,8 +29,6 @@
 #ifndef _EH_ALLOC_H
 #define _EH_ALLOC_H
 
-#include <stdlib.h>
-
 static inline void *eh_zalloc(size_t size)
 {
 	return calloc(1, size);
