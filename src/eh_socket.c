@@ -42,6 +42,46 @@
 #include "eh.h"
 #include "eh_socket.h"
 
+int eh_socket(int family, int type, bool cloexec, bool nonblock)
+{
+	int fd;
+#ifdef SOCK_CLOEXEC
+	if (cloexec)
+		type |= SOCK_CLOEXEC;
+	else
+		type &= ~SOCK_CLOEXEC;
+#endif
+#ifdef SOCK_NONBLOCK
+	if (nonblock)
+		type |= SOCK_NONBLOCK;
+	else
+		type &= ~SOCK_NONBLOCK;
+#endif
+	if ((fd = socket(family, type, 0)) < 0)
+		goto socket_done;
+
+	if (cloexec || nonblock) {
+		int fl2, fl = fcntl(fd, F_GETFL);
+		if (fl < 0)
+			goto socket_failed;
+		fl2 = fl;
+		if (cloexec)
+			fl2 |= FD_CLOEXEC;
+		if (nonblock)
+			fl2 |= O_NONBLOCK;
+
+		if (fl != fl2 && fcntl(fd, F_SETFL, fl2) < 0)
+			goto socket_failed;
+		goto socket_done;
+	}
+
+socket_failed:
+	close(fd);
+	fd = -1;
+socket_done:
+	return fd;
+}
+
 static inline ssize_t eh_socket_ntop_ipv4(char *str, size_t size, const struct sockaddr_in *sin)
 {
 	/* addr:port */

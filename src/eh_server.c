@@ -33,7 +33,6 @@
 #include <errno.h>
 #include <assert.h>
 
-#include <fcntl.h>
 #include <sys/socket.h>
 #include <sys/un.h>
 #include <arpa/inet.h>  /* htons() */
