@@ -32,6 +32,10 @@
 #include <errno.h>
 #include <string.h>
 
+#include <unistd.h>
+#include <stdbool.h>
+
+#include <fcntl.h>
 #include <sys/socket.h>
 #include <arpa/inet.h>
 
