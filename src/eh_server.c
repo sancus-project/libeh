@@ -27,9 +27,18 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include <unistd.h>
+#include <stdbool.h>
+#include <string.h>
+#include <errno.h>
+#include <assert.h>
+
+#include <fcntl.h>
 #include <sys/socket.h>
+#include <arpa/inet.h>  /* htons() */
 
 #include "eh.h"
+#include "eh_socket.h"
 #include "eh_connection.h"
 #include "eh_server.h"
 #include "eh_watcher.h"
@@ -37,13 +46,6 @@
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
-
-#include <arpa/inet.h>  /* htons() */
-#include <string.h>
-#include <unistd.h>
-#include <errno.h>
-#include <assert.h>
-#include <fcntl.h>
 
 /* 1:ok, 0:bad address, -1:errno */
 static int init_ipv4(struct sockaddr_in *sin, const char *addr, unsigned port)
@@ -64,39 +66,19 @@ static int init_ipv4(struct sockaddr_in *sin, const char *addr, unsigned port)
 }
 
 /* -1:error, >=0 fd */
-static int init_tcp(int family)
+static inline int init_tcp(int family, bool cloexec)
 {
-	int sock_type = SOCK_STREAM;
-#ifdef SOCK_NONBLOCK
-	sock_type |= SOCK_NONBLOCK;
-#endif
-	int fd = socket(family, sock_type, 0);
+	int fd = eh_socket(family, SOCK_STREAM, cloexec, true);
 
 	if (fd >= 0) {
 		int flags = 1;
 		struct linger ling = {0, 0}; /* disabled */
 
-#ifndef SOCK_NONBLOCK
-		int fl = fcntl(fd, F_GETFL, 0);
-		if (fl < 0)
-			goto fail_fcntl;
-		fl |= O_NONBLOCK;
-		if (fcntl(fd, F_SETFL, fl) < 0)
-			goto fail_fcntl;
-#endif
 		setsockopt(fd, SOL_SOCKET, SO_REUSEADDR, (void *)&flags, sizeof(flags));
 		setsockopt(fd, SOL_SOCKET, SO_KEEPALIVE, (void *)&flags, sizeof(flags));
 		setsockopt(fd, SOL_SOCKET, SO_LINGER, (void *)&ling, sizeof(ling));
 	}
 
-#ifndef SOCK_NONBLOCK
-	goto done;
-
-fail_fcntl:
-	close(fd);
-	fd = -1;
-done:
-#endif
 	return fd;
 }
 
@@ -135,7 +117,7 @@ try_accept:
 }
 
 /* 1:ok, 0:bad address, -1:errno */
-int eh_server_ipv4_tcp(struct eh_server *self, const char *addr, unsigned port)
+int eh_server_ipv4_tcp(struct eh_server *self, const char *addr, unsigned port, bool cloexec)
 {
 	struct sockaddr_in sin;
 	int fd;
@@ -145,7 +127,7 @@ int eh_server_ipv4_tcp(struct eh_server *self, const char *addr, unsigned port)
 		return e; /* 0 or -1 */
 
 	/* self->fd */
-	if ((fd = init_tcp(sin.sin_family)) < 0)
+	if ((fd = init_tcp(sin.sin_family, cloexec)) < 0)
 		return -1; /* socket() call failed */
 	else if (bind(fd, (struct sockaddr *)&sin, sizeof(sin)) < 0) {
 		close(fd);
