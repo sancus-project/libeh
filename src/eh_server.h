@@ -55,6 +55,7 @@ static inline int eh_server_fd(struct eh_server *self)
  * Returns: 1:ok, 0:bad address, -1:errno
  */
 int eh_server_ipv4_tcp(struct eh_server *self, const char *addr, unsigned port, bool cloexec);
+int eh_server_local(struct eh_server *self, const char *path, bool cloexec);
 
 int eh_server_listen(struct eh_server *self, unsigned backlog);
 void eh_server_finish(struct eh_server *self);

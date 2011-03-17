@@ -35,6 +35,7 @@
 
 #include <fcntl.h>
 #include <sys/socket.h>
+#include <sys/un.h>
 #include <arpa/inet.h>  /* htons() */
 
 #include "eh.h"
@@ -63,6 +64,24 @@ static int init_ipv4(struct sockaddr_in *sin, const char *addr, unsigned port)
 		e = inet_pton(sin->sin_family, addr, &sin->sin_addr);
 
 	return e;
+}
+
+static int init_local(struct sockaddr_un *sun, const char *path)
+{
+	size_t l = 0;
+
+	if (path == NULL) {
+		path = "";
+	} else {
+		l = strlen(path);
+		if (l > sizeof(sun->sun_path)-1)
+			return 0; /* too long */
+	}
+
+	sun->sun_family = AF_LOCAL;
+	memcpy(sun->sun_path, path, l+1);
+
+	return 1;
 }
 
 /* -1:error, >=0 fd */
@@ -126,7 +145,6 @@ int eh_server_ipv4_tcp(struct eh_server *self, const char *addr, unsigned port, 
 	if (e != 1)
 		return e; /* 0 or -1 */
 
-	/* self->fd */
 	if ((fd = init_tcp(sin.sin_family, cloexec)) < 0)
 		return -1; /* socket() call failed */
 	else if (bind(fd, (struct sockaddr *)&sin, sizeof(sin)) < 0) {
@@ -136,6 +154,30 @@ int eh_server_ipv4_tcp(struct eh_server *self, const char *addr, unsigned port, 
 
 	eh_io_init(&self->connection_watcher, connect_callback, self, fd, EH_READ);
 
+	return 1;
+}
+
+int eh_server_local(struct eh_server *self, const char *path, bool cloexec)
+{
+	struct sockaddr_un sun;
+	int fd, e;
+
+	assert(self);
+	assert(path);
+
+	e = init_local(&sun, path);
+	if (e != 1)
+		return e; /* 0 or -1 */
+	unlink(path);
+
+	if ((fd = eh_socket(sun.sun_family, SOCK_STREAM, cloexec, true)) < 0)
+		return -1; /* socket() call failed */
+	else if (bind(fd, (struct sockaddr *)&sun, SUN_LEN(&sun)) < 0) {
+		close(fd);
+		return -1;
+	}
+
+	eh_io_init(&self->connection_watcher, connect_callback, self, fd, EH_READ);
 	return 1;
 }
 
