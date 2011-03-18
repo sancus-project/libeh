@@ -1,7 +1,7 @@
 /*
  * This file is part of libeh <http://github.com/amery/libeh>
  *
- * Copyright (c) 2010, Alejandro Mery <amery@geeks.cl>
+ * Copyright (c) 2010 - 2011, Alejandro Mery <amery@geeks.cl>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,11 +29,7 @@
 #ifndef _EH_ALLOC_H
 #define _EH_ALLOC_H
 
-static inline void *eh_zalloc(size_t size)
-{
-	return calloc(1, size);
-}
-
+#define eh_zalloc(S)	calloc(1, S)
 #define eh_free(P)	do { free(P); (P) = NULL; } while(0)
 
 #endif
