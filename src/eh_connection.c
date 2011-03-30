@@ -182,16 +182,20 @@ try_append:
 
 /* exported */
 int eh_connection_init(struct eh_connection *self, int fd,
+		       struct eh_connection_cb *cb,
 		       char *read_buf, size_t read_buf_size,
 		       char *write_buf, size_t write_buf_size)
 {
 	assert(fd >= 0);
+	assert(cb);
 
 	eh_buffer_init(&self->read_buffer, read_buf, read_buf_size);
 	eh_buffer_init(&self->write_buffer, write_buf, write_buf_size);
 
 	eh_io_init(&self->read_watcher, read_callback, self, fd, EH_READ);
 	eh_io_init(&self->write_watcher, write_callback, self, fd, EH_WRITE);
+
+	self->cb = cb;
 	return 1;
 }
 

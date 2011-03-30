@@ -70,6 +70,7 @@ static inline int eh_connection_fd(struct eh_connection *self)
 }
 
 int eh_connection_init(struct eh_connection *self, int fd,
+		       struct eh_connection_cb *cb,
 		       char *read_buf, size_t read_buf_size,
 		       char *write_buf, size_t write_buf_size);
 void eh_connection_finish(struct eh_connection *self);
