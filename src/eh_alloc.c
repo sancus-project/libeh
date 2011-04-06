@@ -1,7 +1,7 @@
 /*
  * This file is part of libeh <http://github.com/amery/libeh>
  *
- * Copyright (c) 2010 - 2011, Alejandro Mery <amery@geeks.cl>
+ * Copyright (c) 2010, Alejandro Mery <amery@geeks.cl>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,23 +26,9 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#ifndef _EH_ALLOC_H
-#define _EH_ALLOC_H
 
-extern void *(*_eh_calloc) (size_t, size_t);
-extern void (*_eh_free) (void *);
+#include <stdlib.h>
+#include "eh_alloc.h"
 
-#define eh_zalloc(S)	_eh_calloc(1, S)
-#define eh_free(P)	do { _eh_free(P); (P) = NULL; } while(0)
-
-static inline void eh_set_calloc(void *(*f) (size_t, size_t))
-{
-	_eh_calloc = f;
-}
-
-static inline void eh_set_free(void (*f) (void *))
-{
-	_eh_free = f;
-}
-
-#endif
+void *(*_eh_calloc) (size_t, size_t) = calloc;
+void (*_eh_free) (void *) = free;
