@@ -3,8 +3,8 @@ AM_CFLAGS = $(CWARNFLAGS)
 lib_LTLIBRARIES = libeh.la
 
 libeh_la_SOURCES = \
-	eh_buffer.c eh_connection.c eh_fmt_cstr.c eh_serial.c \
-	eh_server.c eh_socket.c
+	eh_alloc.c eh_buffer.c eh_connection.c eh_fmt_cstr.c \
+	eh_serial.c eh_server.c eh_socket.c
 
 include_HEADERS = \
 	eh.h eh_alloc.h eh_buffer.h eh_connection.h eh_fd.h \
