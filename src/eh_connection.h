@@ -68,6 +68,10 @@ static inline int eh_connection_fd(struct eh_connection *self)
 {
 	return self->read_watcher.fd;
 }
+static inline void eh_connection_reset_readbuffer(struct eh_connection *self)
+{
+	eh_buffer_reset(&self->read_buffer);
+}
 
 int eh_connection_init(struct eh_connection *self, int fd,
 		       struct eh_connection_cb *cb,
