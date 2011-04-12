@@ -69,15 +69,20 @@ try_read:
 		if (l == 0) { /* EOF */
 			goto terminate;
 		} else if (l > 0) { /* has new data, pass over */
-			ssize_t rc = eh_buffer_len(buf);
-			if (cb->on_read)
-				rc = cb->on_read(self, eh_buffer_data(buf), rc);
+			if (cb->on_read) {
+				while ((l = eh_buffer_len(buf))) {
+					l = cb->on_read(self, eh_buffer_data(buf), l);
 
-			if (rc < 0)
-				goto terminate;
-			else
-				eh_buffer_skip(buf, rc);
-
+					if (l < 0)
+						goto terminate;
+					else if (l == 0)
+						break;
+					else
+						eh_buffer_skip(buf, l);
+				}
+			} else {
+				eh_buffer_reset(buf);
+			}
 		} else if (errno == EINTR) {
 			goto try_read;
 		} else if (errno != EAGAIN && errno != EWOULDBLOCK) {
