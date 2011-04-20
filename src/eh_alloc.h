@@ -29,11 +29,18 @@
 #ifndef _EH_ALLOC_H
 #define _EH_ALLOC_H
 
+extern void *(*_eh_alloc) (size_t);
 extern void *(*_eh_calloc) (size_t, size_t);
 extern void (*_eh_free) (void *);
 
+#define eh_alloc(S)	_eh_alloc(S)
 #define eh_zalloc(S)	_eh_calloc(1, S)
-#define eh_free(P)	do { _eh_free(P); (P) = NULL; } while(0)
+#define eh_free(P)	do { _eh_free((void*)(P)); (P) = NULL; } while(0)
+
+static inline void eh_set_alloc(void *(*f) (size_t))
+{
+	_eh_alloc = f;
+}
 
 static inline void eh_set_calloc(void *(*f) (size_t, size_t))
 {

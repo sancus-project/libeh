@@ -30,5 +30,6 @@
 #include <stdlib.h>
 #include "eh_alloc.h"
 
+void *(*_eh_alloc) (size_t) = malloc;
 void *(*_eh_calloc) (size_t, size_t) = calloc;
 void (*_eh_free) (void *) = free;
