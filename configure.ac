@@ -15,6 +15,7 @@ LT_INIT
 AC_PROG_CC_C99
 
 # Checks for libraries.
+PKG_CHECK_MODULES(libev, [ev])
 
 # Checks for header files.
 
@@ -23,7 +24,6 @@ CWARNFLAGS="-Wall -Wextra -pedantic"
 AC_SUBST(CWARNFLAGS)
 
 # Checks for library functions.
-AC_CHECK_LIB(ev, ev_loop)
 
 AC_CONFIG_SRCDIR([src/eh.h])
 AC_CONFIG_FILES([eh.pc])

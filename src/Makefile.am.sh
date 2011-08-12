@@ -7,7 +7,7 @@ list() {
 
 cd "${0%/*}"
 cat <<EOT | tee Makefile.am
-AM_CFLAGS = \$(CWARNFLAGS)
+AM_CFLAGS = \$(CWARNFLAGS) \$(libev_CFLAGS)
 
 lib_LTLIBRARIES = libeh.la
 

@@ -6,6 +6,5 @@ includedir=@includedir@
 Name: libeh
 Description: Helper library for event-driven applications
 Version: @PACKAGE_VERSION@
-Libs: -L${libdir} -leh
-Libs.private: @LIBS@
+Libs: -L${libdir} -leh @libev_LIBS@
 Cflags: -I${includedir}

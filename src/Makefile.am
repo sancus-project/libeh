@@ -1,4 +1,4 @@
-AM_CFLAGS = $(CWARNFLAGS)
+AM_CFLAGS = $(CWARNFLAGS) $(libev_CFLAGS)
 
 lib_LTLIBRARIES = libeh.la
 
