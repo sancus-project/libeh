@@ -20,7 +20,7 @@ PKG_CHECK_MODULES(libev, [ev])
 # Checks for header files.
 
 # Checks for typedefs, structures, and compiler characteristics.
-CWARNFLAGS="-Wall -Wextra -pedantic"
+CWARNFLAGS="-Wall -Wextra -pedantic -Winline"
 AC_SUBST(CWARNFLAGS)
 
 # Checks for library functions.
