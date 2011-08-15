@@ -88,4 +88,37 @@ try_close:
 	return ret;
 }
 
+#ifdef _SYS_UIO_H
+static inline ssize_t eh_writev(int fd, struct iovec *iov, int iovcnt)
+{
+	int wt = 0;
+
+	while (iovcnt) {
+		register int wc;
+try_write:
+		wc = writev(fd, iov, iovcnt);
+		if (unlikely(wc < 0)) {
+			if (errno == EINTR)
+				goto try_write;
+			return wc;
+		}
+
+		wt += wc;
+		while (wc) {
+			if ((unsigned)wc >= iov->iov_len) {
+				wc -= iov->iov_len;
+				iovcnt--;
+				iov++;
+			} else {
+				iov->iov_len -= wc;
+				iov->iov_base += wc;
+				wc = 0;
+			}
+		}
+	}
+
+	return wt;
+}
+#endif /* _SYS_UIO_H */
+
 #endif /* !_EH_FD_H */
