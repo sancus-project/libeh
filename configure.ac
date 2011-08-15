@@ -28,6 +28,7 @@ AC_SUBST(CWARNFLAGS)
 AC_CONFIG_SRCDIR([src/eh.h])
 AC_CONFIG_FILES([eh.pc])
 AC_CONFIG_FILES([Makefile
+		 doc/Doxyfile
 		 doc/Makefile
 		 src/Makefile])
 AC_OUTPUT
