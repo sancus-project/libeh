@@ -26,19 +26,17 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#ifndef _EH_FMT_H
-#define _EH_FMT_H
 
-ssize_t eh_fmt_cstr(char *, size_t, const char *, size_t);
+#include <stdlib.h>
 
-static inline size_t eh_fmt_unsigned_len(register unsigned n, const unsigned b)
+#include "eh.h"
+#include "eh_fmt.h"
+
+size_t eh_fmt_unsigned(char *buf, register unsigned n)
 {
-	register unsigned l=1;
-	for (; n>(b-1); n/=b, l++)
-		;
+	size_t l = eh_fmt_unsigned_len(n, 10);
+	char *p = buf+l;
+	for (; p>buf; n/=10)
+		*--p = n%10 + '0';
 	return l;
 }
-
-size_t eh_fmt_unsigned(char *, unsigned);
-
-#endif /* !_EH_FMT_H */
