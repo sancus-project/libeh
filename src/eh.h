@@ -44,6 +44,17 @@
 #	define UNUSED(x) x
 #endif
 
+/**
+ * \def TYPECHECK_PRINTF
+ * \brief Asks gcc to validate arguments as it where printf()
+ */
+#ifdef TYPECHECK_PRINTF
+#elif defined(__GNUC__)
+#       define TYPECHECK_PRINTF(I, J)   __attribute__ ((format (printf, I, J)))
+#else
+#       define TYPECHECK_PRINTF(I, J)
+#endif
+
 /** Reference to the structure based on the address of one of it's components */
 #ifndef container_of
 #define container_of(P,T,M)	(T *)((char *)(P) - offsetof(T, M))
