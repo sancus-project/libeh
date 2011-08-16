@@ -60,6 +60,9 @@ void eh_log_set_default_level(enum eh_log_level level);
 struct eh_logger *eh_logger_new(const char *name);
 struct eh_logger *eh_logger_newf(const char *fmt, ...) TYPECHECK_PRINTF(1, 2);
 
+struct eh_logger *eh_logger_get(const char *name);
+struct eh_logger *eh_logger_getf(const char *fmt, ...) TYPECHECK_PRINTF(1, 2);
+
 void eh_logger_del(struct eh_logger *);
 
 #define eh_logger_name(S)		((S) ? (S)->name : NULL)

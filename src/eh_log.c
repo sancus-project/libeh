@@ -91,6 +91,28 @@ struct eh_logger *eh_logger_newf(const char *fmt, ...)
 	return eh_logger_new(buf);
 }
 
+struct eh_logger *eh_logger_get(const char *name)
+{
+	eh_list_foreach(&loggers, item) {
+		struct eh_logger *o = container_of(item, struct eh_logger, loggers);
+		if (strcmp(name, o->name) == 0)
+			return o;
+	}
+	return eh_logger_new(name);
+}
+
+struct eh_logger *eh_logger_getf(const char *fmt, ...)
+{
+	char buf[128]; /* arbitrary size */
+	va_list ap;
+
+	va_start(ap, fmt);
+	vsnprintf(buf, sizeof(buf), fmt, ap);
+	va_end(ap);
+
+	return eh_logger_get(buf);
+}
+
 void eh_logger_del(struct eh_logger *self)
 {
 	eh_list_del(&self->loggers);
