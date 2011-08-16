@@ -26,69 +26,73 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#ifndef _EH_LOG_H
-#define _EH_LOG_H
 
-enum eh_log_level {
-	EH_LOG_FATAL,
-	EH_LOG_CRITICAL,
-	EH_LOG_ERROR,
-	EH_LOG_WARNING,
-	EH_LOG_INFO,
-	EH_LOG_DEBUG,
-	EH_LOG_TRACE,
-};
+#include <string.h>
+#include <stddef.h>	/* offsetof() */
+#include <stdarg.h>
+#include <stdio.h>
 
-struct eh_logger {
-	struct eh_list loggers;
+#include "eh.h"
+#include "eh_list.h"
+#include "eh_alloc.h"
 
-	enum eh_log_level level;
-	const char name[];
-};
+#include "eh_log.h"
 
 /*
  * logging subsystem
  */
-void eh_log_init(enum eh_log_level level);
-void eh_log_finish(void);
+static struct eh_list loggers;
+enum eh_log_level eh_log_default_level = EH_LOG_TRACE; /* MAX */
 
-void eh_log_set_default_level(enum eh_log_level level);
+void eh_log_set_default_level(enum eh_log_level level)
+{
+	eh_log_default_level = level;
+}
+
+void eh_log_init(enum eh_log_level level)
+{
+	eh_list_init(&loggers);
+	eh_log_default_level = level;
+}
+
+void eh_log_finish(void)
+{
+	eh_list_foreach2(&loggers, item, next) {
+		struct eh_logger *o = container_of(item, struct eh_logger, loggers);
+		eh_logger_del(o);
+	}
+}
 
 /*
- * logger
+ * loggers allocation
  */
-struct eh_logger *eh_logger_new(const char *name);
-struct eh_logger *eh_logger_newf(const char *fmt, ...) TYPECHECK_PRINTF(1, 2);
+struct eh_logger *eh_logger_new(const char *name)
+{
+	size_t l = strlen(name)+1;
+	struct eh_logger *new = eh_alloc(sizeof(struct eh_logger) + l);
+	if (new) {
+		memcpy((char *)new->name, name, l);
 
-void eh_logger_del(struct eh_logger *);
+		new->level = eh_log_default_level;
+		eh_list_append(&loggers, &new->loggers);
+	}
+	return new;
+}
 
-#define eh_logger_name(S)		((S) ? (S)->name : NULL)
-#define eh_logger_level(S, L)		((S) ? (S)->level >= (L) : 1)
-#define eh_logger_set_level(S, L)	do { (S)->level = (L); } while(0)
+struct eh_logger *eh_logger_newf(const char *fmt, ...)
+{
+	char buf[128]; /* arbitrary size */
+	va_list ap;
 
-/*
- * legacy API
- */
-#define _err(S)		fputs(S "\n", stderr)
-#define _errf(F, ...)	fprintf(stderr, F "\n", __VA_ARGS__)
+	va_start(ap, fmt);
+	vsnprintf(buf, sizeof(buf), fmt, ap);
+	va_end(ap);
 
-#define info(S)		_err("I: " S)
-#define warn(S)		_err("W: " S)
-#define err(S)		_err("E: " S)
+	return eh_logger_new(buf);
+}
 
-#define infof(F, ...)	_errf("I: " F, __VA_ARGS__)
-#define warnf(F, ...)	_errf("W: " F, __VA_ARGS__)
-#define errf(F, ...)	_errf("E: " F, __VA_ARGS__)
-
-#define syserr(S)	_errf("E: " S ": %s", strerror(errno))
-#define syserrf(F, ...)	_errf("E: " F ": %s", __VA_ARGS__, strerror(errno))
-
-#ifndef NDEBUG
-#define debug(S)	_errf("D: %s:%u: %s: %s", __FILE__, __LINE__, __func__, S)
-#define debugf(F, ...)	_errf("D: %s:%u: %s: " F, __FILE__, __LINE__, __func__, __VA_ARGS__)
-#else
-#define debug(S)	((void)0)
-#define debugf(...)	((void)0)
-#endif
-
-#endif
+void eh_logger_del(struct eh_logger *self)
+{
+	eh_list_del(&self->loggers);
+	eh_free(self);
+}
