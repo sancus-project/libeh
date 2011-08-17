@@ -105,23 +105,23 @@ ssize_t eh_log_rawf(const char *name, enum eh_log_level level, int code,
 /*
  * legacy API
  */
-#define _err(S)		fputs(S "\n", stderr)
-#define _errf(F, ...)	fprintf(stderr, F "\n", __VA_ARGS__)
+#define _err(L, S)		eh_log_raw(NULL, L, -1, NULL, 0, S, -1);
+#define _errf(L, F, ...)	eh_log_rawf(NULL, L, -1, NULL, 0, F, __VA_ARGS__);
 
-#define info(S)		_err("I: " S)
-#define warn(S)		_err("W: " S)
-#define err(S)		_err("E: " S)
+#define info(S)		_err(EH_LOG_INFO, S)
+#define warn(S)		_err(EH_LOG_WARNING, S)
+#define err(S)		_err(EH_LOG_ERROR, S)
 
-#define infof(F, ...)	_errf("I: " F, __VA_ARGS__)
-#define warnf(F, ...)	_errf("W: " F, __VA_ARGS__)
-#define errf(F, ...)	_errf("E: " F, __VA_ARGS__)
+#define infof(F, ...)	_errf(EH_LOG_INFO, F, __VA_ARGS__)
+#define warnf(F, ...)	_errf(EH_LOG_WARNING, F, __VA_ARGS__)
+#define errf(F, ...)	_errf(EH_LOG_ERROR, F, __VA_ARGS__)
 
-#define syserr(S)	_errf("E: " S ": %s", strerror(errno))
-#define syserrf(F, ...)	_errf("E: " F ": %s", __VA_ARGS__, strerror(errno))
+#define syserr(S)	errf(S ": %s", strerror(errno))
+#define syserrf(F, ...)	errf(F ": %s", __VA_ARGS__, strerror(errno))
 
 #ifndef NDEBUG
-#define debug(S)	_errf("D: %s:%u: %s: %s", __FILE__, __LINE__, __func__, S)
-#define debugf(F, ...)	_errf("D: %s:%u: %s: " F, __FILE__, __LINE__, __func__, __VA_ARGS__)
+#define debug(S)	_errf(EH_LOG_DEBUG, "%s:%u: %s: " S, __FILE__, __LINE__, __func__)
+#define debugf(F, ...)	_errf(EH_LOG_DEBUG, "%s:%u: %s: " F, __FILE__, __LINE__, __func__, __VA_ARGS__)
 #else
 #define debug(S)	((void)0)
 #define debugf(...)	((void)0)
