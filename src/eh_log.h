@@ -105,6 +105,47 @@ ssize_t eh_log_rawf(const char *name, enum eh_log_level level, int code,
 	} while(0)
 
 /*
+ * helper wrappers
+ */
+#define eh_log_emerg(S, ...)	eh_log(S,  EH_LOG_EMERG, __VA_ARGS__)
+#define eh_log_emergf(S, ...)	eh_logf(S, EH_LOG_EMERG, __VA_ARGS__)
+#define eh_log_alert(S, ...)	eh_log(S,  EH_LOG_ALERT, __VA_ARGS__)
+#define eh_log_alertf(S, ...)	eh_logf(S, EH_LOG_ALERT, __VA_ARGS__)
+#define eh_log_crit(S, ...)	eh_log(S,  EH_LOG_CRIT, __VA_ARGS__)
+#define eh_log_critf(S, ...)	eh_logf(S, EH_LOG_CRIT, __VA_ARGS__)
+#define eh_log_err(S, ...)	eh_log(S,  EH_LOG_ERROR, __VA_ARGS__)
+#define eh_log_errf(S, ...)	eh_logf(S, EH_LOG_ERROR, __VA_ARGS__)
+#define eh_log_warn(S, ...)	eh_log(S,  EH_LOG_WARNING, __VA_ARGS__)
+#define eh_log_warnf(S, ...)	eh_logf(S, EH_LOG_WARNING, __VA_ARGS__)
+#define eh_log_notice(S, ...)	eh_log(S,  EH_LOG_NOTICE, __VA_ARGS__)
+#define eh_log_noticef(S, ...)	eh_logf(S, EH_LOG_NOTICE, __VA_ARGS__)
+#define eh_log_info(S, ...)	eh_log(S,  EH_LOG_INFO, __VA_ARGS__)
+#define eh_log_infof(S, ...)	eh_logf(S, EH_LOG_INFO, __VA_ARGS__)
+
+#define eh_log_syserr(S, P1, P2, P3, M) \
+	eh_log_errf(S, P1, P2, P3, M ": %s", strerrno(errno))
+#define eh_log_syserrf(S, P1, P2, P3, F, ...) \
+	eh_log_errf(S, P1, P2, P3, F ": %s", __VA_ARGS__, strerrno(errno))
+
+#ifndef NDEBUG
+#define _eh_log_debug(S, L, P1, P2, P3, M) \
+	eh_log(S, L, P1, P2, P3, "%s:%u: %s: " M, __FILE__, __LINE__, __func__)
+#define _eh_log_debugf(S, L, P1, P2, P3, F, ...) \
+	eh_log(S, L, P1, P2, P3, "%s:%u: %s: " F, __FILE__, __LINE__, __func__, __VA_ARGS__)
+
+#define eh_log_trace(S, ...)	_eh_log_debug(S,  EH_LOG_TRACE, __VA_ARGS__)
+#define eh_log_tracef(S, ...)	_eh_log_debugf(S, EH_LOG_TRACE, __VA_ARGS__)
+
+#define eh_log_debug(S, ...)	_eh_log_debug(S,  EH_LOG_DEBUG, __VA_ARGS__)
+#define eh_log_debugf(S, ...)	_eh_log_debugf(S, EH_LOG_DEBUG, __VA_ARGS__)
+#else
+#define eh_log_trace(...)
+#define eh_log_tracef(...)
+#define eh_log_debug(...)
+#define eh_log_debugf(...)
+#endif
+
+/*
  * legacy API
  */
 #define _err(L, S)		eh_log_raw(NULL, L, -1, NULL, 0, S, -1);
