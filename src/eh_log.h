@@ -67,8 +67,14 @@ struct eh_logger *eh_logger_getf(const char *fmt, ...) TYPECHECK_PRINTF(1, 2);
 
 void eh_logger_del(struct eh_logger *);
 
-#define eh_logger_name(S)		((S) ? (S)->name : NULL)
-#define eh_logger_level(S, L)		((S) ? (S)->level >= (L) : 1)
+static inline const char *eh_logger_name(struct eh_logger *self)
+{
+	return self ? self->name : NULL;
+}
+static inline int eh_logger_level(struct eh_logger *self, enum eh_log_level level)
+{
+	return self ? self->level >= level : 1;
+}
 #define eh_logger_set_level(S, L)	do { (S)->level = (L); } while(0)
 
 /*
