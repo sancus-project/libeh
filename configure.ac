@@ -15,7 +15,7 @@ LT_INIT
 AC_PROG_CC_C99
 
 # Checks for libraries.
-PKG_CHECK_MODULES(libev, [ev])
+PKG_CHECK_MODULES(libev, [libev])
 
 # Checks for header files.
 
