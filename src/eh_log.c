@@ -141,20 +141,28 @@ ssize_t eh_log_stderr(const char *name, enum eh_log_level level, int code,
 	p += 3;
 
 	/* "name" */
-	v[l++] = (struct iovec) { (void*)name, (size_t)strlen(name) };
+	if (name) {
+		v[l++] = (struct iovec) { (void*)name, (size_t)strlen(name) };
 
-	if (code > 0) {
-		/* ": code: " */
-		int l2 = eh_fmt_unsigned(p + 2, code);
-		v[l++] = (struct iovec) { p, l2 + 4 };
+		if (code > 0) {
+			/* ": code: " */
+			int l2 = eh_fmt_unsigned(p + 2, code);
+			v[l++] = (struct iovec) { p, l2 + 4 };
+			*p++ = ':';
+			*p++ = ' ';
+			p += l2;
+			*p++ = ':';
+			*p++ = ' ';
+		} else {
+			/* ": " */
+			v[l++] = (struct iovec) { ": ", 2 };
+		}
+	} else if (code > 0) {
+		/* "code: " */
+		int l2 = eh_fmt_unsigned(p, code);
+		v[l++] = (struct iovec) { p, l2 + 2 };
 		*p++ = ':';
 		*p++ = ' ';
-		p += l2;
-		*p++ = ':';
-		*p++ = ' ';
-	} else {
-		/* ": " */
-		v[l++] = (struct iovec) { ": ", 2 };
 	}
 
 	/* "..." */
