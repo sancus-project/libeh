@@ -113,31 +113,31 @@ ssize_t eh_log_rawf(const char *name, enum eh_log_level level, int code,
 /*
  * helper wrappers
  */
-#define eh_log_emerg(S, ...)	eh_log(S,  EH_LOG_EMERG, __VA_ARGS__)
+#define eh_log_emerg(S, ...)	eh_log(S,  EH_LOG_EMERG, __VA_ARGS__, -1)
 #define eh_log_emergf(S, ...)	eh_logf(S, EH_LOG_EMERG, __VA_ARGS__)
-#define eh_log_alert(S, ...)	eh_log(S,  EH_LOG_ALERT, __VA_ARGS__)
+#define eh_log_alert(S, ...)	eh_log(S,  EH_LOG_ALERT, __VA_ARGS__, -1)
 #define eh_log_alertf(S, ...)	eh_logf(S, EH_LOG_ALERT, __VA_ARGS__)
-#define eh_log_crit(S, ...)	eh_log(S,  EH_LOG_CRIT, __VA_ARGS__)
+#define eh_log_crit(S, ...)	eh_log(S,  EH_LOG_CRIT, __VA_ARGS__, -1)
 #define eh_log_critf(S, ...)	eh_logf(S, EH_LOG_CRIT, __VA_ARGS__)
-#define eh_log_err(S, ...)	eh_log(S,  EH_LOG_ERROR, __VA_ARGS__)
-#define eh_log_errf(S, ...)	eh_logf(S, EH_LOG_ERROR, __VA_ARGS__)
-#define eh_log_warn(S, ...)	eh_log(S,  EH_LOG_WARNING, __VA_ARGS__)
+#define eh_log_err(S, ...)	eh_log(S,  EH_LOG_ERR, __VA_ARGS__, -1)
+#define eh_log_errf(S, ...)	eh_logf(S, EH_LOG_ERR, __VA_ARGS__)
+#define eh_log_warn(S, ...)	eh_log(S,  EH_LOG_WARNING, __VA_ARGS__, -1)
 #define eh_log_warnf(S, ...)	eh_logf(S, EH_LOG_WARNING, __VA_ARGS__)
-#define eh_log_notice(S, ...)	eh_log(S,  EH_LOG_NOTICE, __VA_ARGS__)
+#define eh_log_notice(S, ...)	eh_log(S,  EH_LOG_NOTICE, __VA_ARGS__, -1)
 #define eh_log_noticef(S, ...)	eh_logf(S, EH_LOG_NOTICE, __VA_ARGS__)
-#define eh_log_info(S, ...)	eh_log(S,  EH_LOG_INFO, __VA_ARGS__)
+#define eh_log_info(S, ...)	eh_log(S,  EH_LOG_INFO, __VA_ARGS__, -1)
 #define eh_log_infof(S, ...)	eh_logf(S, EH_LOG_INFO, __VA_ARGS__)
 
 #define eh_log_syserr(S, P1, P2, P3, M) \
-	eh_log_errf(S, P1, P2, P3, M ": %s", strerrno(errno))
+	eh_log_errf(S, P1, P2, P3, M ": %s", strerror(errno))
 #define eh_log_syserrf(S, P1, P2, P3, F, ...) \
-	eh_log_errf(S, P1, P2, P3, F ": %s", __VA_ARGS__, strerrno(errno))
+	eh_log_errf(S, P1, P2, P3, F ": %s", __VA_ARGS__, strerror(errno))
 
 #ifndef NDEBUG
 #define _eh_log_debug(S, L, P1, P2, P3, M) \
 	eh_log(S, L, P1, P2, P3, "%s:%u: %s: " M, __FILE__, __LINE__, __func__)
 #define _eh_log_debugf(S, L, P1, P2, P3, F, ...) \
-	eh_log(S, L, P1, P2, P3, "%s:%u: %s: " F, __FILE__, __LINE__, __func__, __VA_ARGS__)
+	eh_logf(S, L, P1, P2, P3, "%s:%u: %s: " F, __FILE__, __LINE__, __func__, __VA_ARGS__)
 
 #define eh_log_trace(S, ...)	_eh_log_debug(S,  EH_LOG_TRACE, __VA_ARGS__)
 #define eh_log_tracef(S, ...)	_eh_log_debugf(S, EH_LOG_TRACE, __VA_ARGS__)
@@ -163,9 +163,9 @@ ssize_t eh_log_rawf(const char *name, enum eh_log_level level, int code,
 #define errf(F, ...)	eh_log_errf(NULL, -1, NULL, 0, F, __VA_ARGS__)
 
 #define syserr(S)	eh_log_syserr(NULL, -1, NULL, 0, S)
-#define syserrf(F, ...)	eh_log_syserr(NULL, -1, NULL, 0, F, __VA_ARGS__)
+#define syserrf(F, ...)	eh_log_syserrf(NULL, -1, NULL, 0, F, __VA_ARGS__)
 
 #define debug(S)	eh_log_debug(NULL, -1, NULL, 0, S)
-#define debugf(F, ...)	eh_log_debug(NULL, -1, NULL, 0, F, __VA_ARGS__)
+#define debugf(F, ...)	eh_log_debugf(NULL, -1, NULL, 0, F, __VA_ARGS__)
 
 #endif
