@@ -92,12 +92,12 @@ ssize_t eh_log_rawf(const char *name, enum eh_log_level level, int code,
 /*
  * log filters
  */
-#define eh_log(S, L, ...)      do { \
+#define eh_log(S, L, ...)	do { \
 	if (eh_logger_level(S, L)) \
 		eh_log_raw(eh_logger_name(S), L, __VA_ARGS__); \
 	} while(0)
 
-#define eh_logf(S, L, ...)     do { \
+#define eh_logf(S, L, ...)	do { \
 	if (eh_logger_level(S, L)) \
 		eh_log_rawf(eh_logger_name(S), L, __VA_ARGS__); \
 	} while(0)
