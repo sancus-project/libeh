@@ -111,7 +111,8 @@ try_write:
 				iov++;
 			} else {
 				iov->iov_len -= wc;
-				iov->iov_base += wc;
+				/* GCC: warning: pointer of type ‘void *’ used in arithmetic */
+				iov->iov_base = (char*)iov->iov_base+wc;
 				wc = 0;
 			}
 		}
