@@ -70,6 +70,26 @@ void eh_logger_del(struct eh_logger *);
 #define eh_logger_set_level(S, L)	do { (S)->level = (L); } while(0)
 
 /*
+ * log writter
+ */
+
+typedef ssize_t (*eh_log_f) (enum eh_log_level, const char *, int,
+			     const char *, size_t,
+			     const char *, ssize_t);
+
+void eh_log_set_backend(eh_log_f);
+
+ssize_t eh_log_stderr(enum eh_log_level level, const char *name, int code,
+		   const char *dump, size_t dump_len,
+		   const char *str, ssize_t str_len);
+
+eh_log_f eh_log_raw;
+
+ssize_t eh_log_rawf(enum eh_log_level level, const char *name, int code,
+		   const char *dump, size_t dump_len,
+		   const char *fmt, ...) TYPECHECK_PRINTF(6, 7);
+
+/*
  * legacy API
  */
 #define _err(S)		fputs(S "\n", stderr)
