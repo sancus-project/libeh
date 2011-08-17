@@ -125,7 +125,7 @@ void eh_logger_del(struct eh_logger *self)
 /*
  * log writter
  */
-ssize_t eh_log_stderr(enum eh_log_level level, const char *name, int code,
+ssize_t eh_log_stderr(const char *name, enum eh_log_level level, int code,
 		   const char *UNUSED(dump), size_t UNUSED(dump_len),
 		   const char *str, ssize_t str_len)
 {
@@ -176,7 +176,7 @@ void eh_log_set_backend(eh_log_f f)
 	eh_log_raw = f;
 }
 
-ssize_t eh_log_rawf(enum eh_log_level level, const char *name, int code,
+ssize_t eh_log_rawf(const char *name, enum eh_log_level level, int code,
 		   const char *dump, size_t dump_len,
 		   const char *fmt, ...)
 {
@@ -189,5 +189,5 @@ ssize_t eh_log_rawf(enum eh_log_level level, const char *name, int code,
 	/* TODO: validate l */
 	va_end(ap);
 
-	return eh_log_raw(level, name, code, dump, dump_len, buf, l);
+	return eh_log_raw(name, level, code, dump, dump_len, buf, l);
 }

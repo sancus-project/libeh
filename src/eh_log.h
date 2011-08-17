@@ -73,19 +73,19 @@ void eh_logger_del(struct eh_logger *);
  * log writter
  */
 
-typedef ssize_t (*eh_log_f) (enum eh_log_level, const char *, int,
+typedef ssize_t (*eh_log_f) (const char *, enum eh_log_level, int,
 			     const char *, size_t,
 			     const char *, ssize_t);
 
 void eh_log_set_backend(eh_log_f);
 
-ssize_t eh_log_stderr(enum eh_log_level level, const char *name, int code,
+ssize_t eh_log_stderr(const char *name, enum eh_log_level level, int code,
 		   const char *dump, size_t dump_len,
 		   const char *str, ssize_t str_len);
 
 eh_log_f eh_log_raw;
 
-ssize_t eh_log_rawf(enum eh_log_level level, const char *name, int code,
+ssize_t eh_log_rawf(const char *name, enum eh_log_level level, int code,
 		   const char *dump, size_t dump_len,
 		   const char *fmt, ...) TYPECHECK_PRINTF(6, 7);
 
