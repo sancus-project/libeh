@@ -31,8 +31,11 @@
 #include <stddef.h>	/* offsetof() */
 #include <stdarg.h>
 #include <stdio.h>
+#include <sys/uio.h>
 
 #include "eh.h"
+#include "eh_fmt.h"
+#include "eh_fd.h"
 #include "eh_list.h"
 #include "eh_alloc.h"
 
@@ -123,10 +126,47 @@ void eh_logger_del(struct eh_logger *self)
  * log writter
  */
 ssize_t eh_log_stderr(enum eh_log_level level, const char *name, int code,
-		   const char *dump, size_t dump_len,
+		   const char *UNUSED(dump), size_t UNUSED(dump_len),
 		   const char *str, ssize_t str_len)
 {
-	return 0;
+	struct iovec v[5];
+
+	char buf[20] = "<?> ";
+	char *p = buf;
+	int l=0;
+
+	/* "<?> " */
+	v[l++] = (struct iovec) { p++, 4 };
+	*p++ = '0' + level;
+	p += 3;
+
+	/* "name" */
+	v[l++] = (struct iovec) { (void*)name, (size_t)strlen(name) };
+
+	if (code > 0) {
+		/* ": code: " */
+		int l2 = eh_fmt_unsigned(p + 2, code);
+		v[l++] = (struct iovec) { p, l2 + 4 };
+		*p++ = ':';
+		*p++ = ' ';
+		p += l2;
+		*p++ = ':';
+		*p++ = ' ';
+	} else {
+		/* ": " */
+		v[l++] = (struct iovec) { ": ", 2 };
+	}
+
+	/* "..." */
+	if (str_len < 0)
+		str_len = strlen(str);
+
+	v[l++] = (struct iovec) { (void*)str, (size_t)str_len };
+
+	/* "\n" */
+	v[l++] = (struct iovec) { "\n", 1 };
+
+	return eh_writev(2, v, l);
 }
 
 eh_log_f eh_log_raw = eh_log_stderr;
