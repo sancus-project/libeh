@@ -2,7 +2,7 @@ ACLOCAL_AMFLAGS = -I m4
 
 SUBDIRS = src doc
 
-pkgconfigdir = $(datadir)/pkgconfig
+pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = eh.pc
 
 EXTRA_DIST = LICENSE
