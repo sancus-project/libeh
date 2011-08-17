@@ -30,13 +30,15 @@
 #define _EH_LOG_H
 
 enum eh_log_level {
-	EH_LOG_FATAL,
-	EH_LOG_CRITICAL,
-	EH_LOG_ERROR,
+	EH_LOG_EMERG,
+	EH_LOG_ALERT,
+	EH_LOG_CRIT,
+	EH_LOG_ERR,
 	EH_LOG_WARNING,
+	EH_LOG_NOTICE,
 	EH_LOG_INFO,
-	EH_LOG_DEBUG,
 	EH_LOG_TRACE,
+	EH_LOG_DEBUG,
 };
 
 struct eh_logger {
