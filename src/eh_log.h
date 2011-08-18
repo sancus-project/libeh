@@ -163,7 +163,7 @@ ssize_t eh_log_rawf(const char *name, enum eh_log_level level, int code,
 
 #ifndef NDEBUG
 #define _eh_log_debug(S, L, C, D, DL, M) \
-	eh_log2(S, L, C, D, DL, "%s:%u: %s: " M, __FILE__, __LINE__, __func__)
+	eh_log2f(S, L, C, D, DL, "%s:%u: %s: " M, __FILE__, __LINE__, __func__)
 #define _eh_log_debugf(S, L, C, D, DL, F, ...) \
 	eh_log2f(S, L, C, D, DL, "%s:%u: %s: " F, __FILE__, __LINE__, __func__, __VA_ARGS__)
 
