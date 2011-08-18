@@ -187,21 +187,4 @@ ssize_t eh_log_rawf(const char *name, enum eh_log_level level, int code,
 #define eh_log_debugf(...)
 #endif
 
-/*
- * legacy API
- */
-#define info(S)		eh_log_info(NULL, -1, S)
-#define warn(S)		eh_log_warn(NULL, -1, S)
-#define err(S)		eh_log_err(NULL, -1, S)
-
-#define infof(F, ...)	eh_log_infof(NULL, -1, F, __VA_ARGS__)
-#define warnf(F, ...)	eh_log_warnf(NULL, -1, F, __VA_ARGS__)
-#define errf(F, ...)	eh_log_errf(NULL, -1, F, __VA_ARGS__)
-
-#define syserr(S)	eh_log_syserr(NULL, -1, S)
-#define syserrf(F, ...)	eh_log_syserrf(NULL, -1, F, __VA_ARGS__)
-
-#define debug(S)	eh_log_debug(NULL, -1, S)
-#define debugf(F, ...)	eh_log_debugf(NULL, -1, F, __VA_ARGS__)
-
 #endif
