@@ -67,11 +67,11 @@ struct eh_logger *eh_logger_getf(const char *fmt, ...) TYPECHECK_PRINTF(1, 2);
 
 void eh_logger_del(struct eh_logger *);
 
-static inline const char *eh_logger_name(struct eh_logger *self)
+static inline const char *eh_logger_name(const struct eh_logger *self)
 {
 	return self ? self->name : NULL;
 }
-static inline int eh_logger_level(struct eh_logger *self, enum eh_log_level level)
+static inline int eh_logger_level(const struct eh_logger *self, enum eh_log_level level)
 {
 	return self ? self->level >= level : 1;
 }
