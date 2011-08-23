@@ -31,7 +31,9 @@
 #include <stddef.h>	/* offsetof() */
 #include <stdarg.h>
 #include <stdio.h>
+
 #include <sys/uio.h>
+#include <sys/time.h>
 
 #include "eh.h"
 #include "eh_fd.h"
@@ -124,15 +126,32 @@ void eh_logger_del(struct eh_logger *self)
 /*
  * log writter
  */
+static int _eh_log_stderr_timestamp;
+void eh_log_stderr_timestamp(int enabled)
+{
+	_eh_log_stderr_timestamp = (enabled != 0);
+}
+
 ssize_t eh_log_stderr(const char *name, enum eh_log_level level, int code,
 		   const char *UNUSED(dump), size_t UNUSED(dump_len),
 		   const char *str, ssize_t str_len)
 {
-	struct iovec v[5];
+	struct iovec v[6];
+	struct timeval tv;
 
-	char buf[20];
+	char buf[50];
 	char *p = buf;
 	int l=0, l2;
+
+	/* "[%.3f] " */
+	if (_eh_log_stderr_timestamp && gettimeofday(&tv, NULL) == 0) {
+		l2 = sprintf(p, "[%lu.%06lu] ",
+			     (unsigned long)tv.tv_sec,
+			     (unsigned long)tv.tv_usec);
+
+		v[l++] = (struct iovec) { p, l2 };
+		p += l2;
+	}
 
 	/* "<?> " */
 	l2 = sprintf(p, "<%u> ", level);

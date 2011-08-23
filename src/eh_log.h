@@ -91,6 +91,8 @@ ssize_t eh_log_stderr(const char *name, enum eh_log_level level, int code,
 		   const char *dump, size_t dump_len,
 		   const char *str, ssize_t str_len);
 
+void eh_log_stderr_timestamp(int enabled);
+
 eh_log_f eh_log_raw;
 
 ssize_t eh_log_rawf(const char *name, enum eh_log_level level, int code,
