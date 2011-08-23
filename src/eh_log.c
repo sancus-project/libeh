@@ -34,7 +34,6 @@
 #include <sys/uio.h>
 
 #include "eh.h"
-#include "eh_fmt.h"
 #include "eh_fd.h"
 #include "eh_list.h"
 #include "eh_alloc.h"
@@ -131,14 +130,14 @@ ssize_t eh_log_stderr(const char *name, enum eh_log_level level, int code,
 {
 	struct iovec v[5];
 
-	char buf[20] = "<?> ";
+	char buf[20];
 	char *p = buf;
-	int l=0;
+	int l=0, l2;
 
 	/* "<?> " */
-	v[l++] = (struct iovec) { p++, 4 };
-	*p++ = '0' + level;
-	p += 3;
+	l2 = sprintf(p, "<%u> ", level);
+	v[l++] = (struct iovec) { p, l2 };
+	p += l2;
 
 	/* "name" */
 	if (name) {
@@ -146,29 +145,23 @@ ssize_t eh_log_stderr(const char *name, enum eh_log_level level, int code,
 
 		if (code > 0) {
 			/* ": code: " */
-			int l2 = eh_fmt_unsigned(p + 2, code);
-			v[l++] = (struct iovec) { p, l2 + 4 };
-			*p++ = ':';
-			*p++ = ' ';
+			l2 = sprintf(p, ": %u: ", code);
+			v[l++] = (struct iovec) { p, l2 };
 			p += l2;
-			*p++ = ':';
-			*p++ = ' ';
 		} else {
 			/* ": " */
 			v[l++] = (struct iovec) { ": ", 2 };
 		}
 	} else if (code > 0) {
 		/* "code: " */
-		int l2 = eh_fmt_unsigned(p, code);
-		v[l++] = (struct iovec) { p, l2 + 2 };
-		*p++ = ':';
-		*p++ = ' ';
+		int l2 =sprintf(p, ": %u: "+2, code);
+		v[l++] = (struct iovec) { p, l2 };
+		p += l2;
 	}
 
 	/* "..." */
 	if (str_len < 0)
 		str_len = strlen(str);
-
 	v[l++] = (struct iovec) { (void*)str, (size_t)str_len };
 
 	/* "\n" */
