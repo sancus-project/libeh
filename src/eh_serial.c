@@ -41,16 +41,10 @@
 int eh_serial_open(struct eh_serial *self, const char *devname,
 			   bool cloexec, struct termios *copy)
 {
-	size_t l = strlen(devname);
 	assert(self != NULL);
 	assert(devname != NULL);
 
-	if (l > sizeof(self->devname) - 1)
-		l = sizeof(self->devname)-1;
-	memcpy(self->devname, devname, l);
-	self->devname[l] = '\0';
-
-	if ((self->fd = eh_open(self->devname, O_RDWR|O_NOCTTY|O_NONBLOCK, cloexec, 0)) < 0)
+	if ((self->fd = eh_open(devname, O_RDWR|O_NOCTTY|O_NONBLOCK, cloexec, 0)) < 0)
 		goto init_done;
 	else if (tcgetattr(self->fd, &self->oldtio) < 0)
 		goto init_fail;

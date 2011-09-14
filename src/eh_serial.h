@@ -32,13 +32,8 @@
 #include <stdbool.h>
 #include <termios.h>
 
-enum {
-	EH_SERIAL_MAX_DEVNAME = 32,
-};
-
 struct eh_serial {
 	int fd;
-	char devname[EH_SERIAL_MAX_DEVNAME];
 
 	struct termios oldtio;
 };
@@ -71,7 +66,5 @@ static inline void eh_serial_setup_8N1(struct termios *tio, speed_t baudrate)
 
 /** returns the fd of an eh_serial */
 #define eh_serial_fd(S)		((S)->fd)
-/** returns the devname of an eh_serial */
-#define eh_serial_devname(S)	((S)->devname)
 
 #endif /* !_EH_SERIAL_H */
