@@ -11,6 +11,25 @@ AC_CONFIG_MACRO_DIR([m4])
 
 LT_INIT
 
+# --enable-debug
+#
+AC_MSG_CHECKING([whether to build with debug information])
+AC_ARG_ENABLE([debug],
+	[AS_HELP_STRING([--enable-debug], [enable debug data generation (def=almost)])],
+	[debugit="$enableval"],
+	[debugit=almost])
+AC_MSG_RESULT([$debugit])
+
+if test x"$debugit" = x"yes"; then
+	AC_DEFINE([DEBUG],[],[Debug Mode])
+	AM_CFLAGS="$AM_CFLAGS -g -O0"
+elif test x"$debugit" = x"no"; then
+	AC_DEFINE([NDEBUG],[],[No-debug Mode])
+	AM_CFLAGS="$AM_CFLAGS -O3"
+fi
+AM_CFLAGS="$AM_CFLAGS -Wall -Wextra -pedantic -Winline"
+AC_SUBST([AM_CFLAGS])
+
 # Checks for programs.
 AC_PROG_CC_C99
 
@@ -20,8 +39,6 @@ PKG_CHECK_MODULES(libev, [libev])
 # Checks for header files.
 
 # Checks for typedefs, structures, and compiler characteristics.
-CWARNFLAGS="-Wall -Wextra -pedantic -Winline"
-AC_SUBST(CWARNFLAGS)
 
 # Checks for library functions.
 
