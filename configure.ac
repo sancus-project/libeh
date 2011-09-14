@@ -20,15 +20,15 @@ AC_ARG_ENABLE([debug],
 	[debugit=almost])
 AC_MSG_RESULT([$debugit])
 
+# CFLAGS
 if test x"$debugit" = x"yes"; then
 	AC_DEFINE([DEBUG],[],[Debug Mode])
-	AM_CFLAGS="$AM_CFLAGS -g -O0"
+	CFLAGS="-g -O0"
 elif test x"$debugit" = x"no"; then
 	AC_DEFINE([NDEBUG],[],[No-debug Mode])
-	AM_CFLAGS="$AM_CFLAGS -O3"
+	CFLAGS="-O3"
 fi
-AM_CFLAGS="$AM_CFLAGS -Wall -Wextra -pedantic -Winline"
-AC_SUBST([AM_CFLAGS])
+CFLAGS="$CFLAGS -Wall -Wextra -pedantic -Winline"
 
 # Checks for programs.
 AC_PROG_CC_C99
