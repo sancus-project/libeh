@@ -64,8 +64,8 @@ try_open:
 			if (fcntl(fd, F_SETFL, fl|FD_CLOEXEC) < 0) {
 				goto open_failed;
 			}
-		goto open_done;
 	}
+	goto open_done;
 
 open_failed:
 	close(fd);
