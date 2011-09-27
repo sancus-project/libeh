@@ -177,22 +177,24 @@ ssize_t eh_log_stderr(const char *name, enum eh_log_level level, int code,
 
 	char buf[50];
 	char *p = buf;
-	int l=0, l2;
+	int l=0, l2, pl=sizeof(buf);
 
 	/* "[%.3f] " */
 	if (_eh_log_stderr_timestamp && gettimeofday(&tv, NULL) == 0) {
-		l2 = sprintf(p, "[%lu.%06lu] ",
+		l2 = snprintf(p, pl, "[%lu.%06lu] ",
 			     (unsigned long)tv.tv_sec,
 			     (unsigned long)tv.tv_usec);
 
 		v[l++] = (struct iovec) { p, l2 };
 		p += l2;
+		pl -= l2;
 	}
 
 	/* "<?> " */
-	l2 = sprintf(p, "<%u> ", level);
+	l2 = snprintf(p, pl, "<%u> ", level);
 	v[l++] = (struct iovec) { p, l2 };
 	p += l2;
+	pl -= l2;
 
 	/* "name" */
 	if (name) {
@@ -200,18 +202,20 @@ ssize_t eh_log_stderr(const char *name, enum eh_log_level level, int code,
 
 		if (code > 0) {
 			/* ": code: " */
-			l2 = sprintf(p, ": %u: ", code);
+			l2 = snprintf(p, pl, ": %u: ", code);
 			v[l++] = (struct iovec) { p, l2 };
 			p += l2;
+			pl -= l2;
 		} else {
 			/* ": " */
 			v[l++] = (struct iovec) { ": ", 2 };
 		}
 	} else if (code > 0) {
 		/* "code: " */
-		int l2 =sprintf(p, ": %u: "+2, code);
+		l2 =snprintf(p, pl, ": %u: "+2, code);
 		v[l++] = (struct iovec) { p, l2 };
 		p += l2;
+		pl -= l2;
 	}
 
 	/* "..." */
