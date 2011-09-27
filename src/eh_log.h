@@ -59,7 +59,10 @@ void eh_log_set_default_level(enum eh_log_level level);
 /*
  * logger
  */
-void eh_logger_init(struct eh_logger *logger, const char *name);
+void eh_logger_init2(struct eh_logger *logger, const char *name);
+void eh_logger_init(struct eh_logger *logger, char *buf, size_t buf_size, const char *name);
+void eh_logger_initf(struct eh_logger *logger, char *buf, size_t buf_size, const char *fmt, ...)
+	TYPECHECK_PRINTF(4, 5);
 
 struct eh_logger *eh_logger_new(const char *name);
 struct eh_logger *eh_logger_newf(const char *fmt, ...) TYPECHECK_PRINTF(1, 2);

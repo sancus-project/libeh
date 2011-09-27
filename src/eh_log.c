@@ -68,13 +68,38 @@ void eh_log_finish(void)
 }
 
 /* preallocated loggers */
-void eh_logger_init(struct eh_logger *new, const char *name)
+void eh_logger_init2(struct eh_logger *new, const char *name)
 {
 	new->name = name;
 	new->level = eh_log_default_level;
 
 	/* don't place them on the list until eh_logger_del learns to distinguish */
 	eh_list_init(&new->loggers);
+}
+
+void eh_logger_init(struct eh_logger *new, char *buf, size_t buf_size, const char *name)
+{
+	size_t l = strlen(name)+1;
+
+	if (l>buf_size) {
+		/* truncate */
+		l = buf_size-1;
+		buf[l-1] = '\0';
+	}
+
+	memcpy(buf, name, l);
+	eh_logger_init2(new, buf);
+}
+
+void eh_logger_initf(struct eh_logger *new, char *buf, size_t buf_size, const char *fmt, ...)
+{
+	va_list ap;
+
+	va_start(ap, fmt);
+	vsnprintf(buf, buf_size, fmt, ap);
+	va_end(ap);
+
+	eh_logger_init2(new, buf);
 }
 
 /*
