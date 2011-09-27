@@ -37,6 +37,7 @@
 
 #include "eh.h"
 #include "eh_fd.h"
+#include "eh_fmt.h"
 #include "eh_list.h"
 #include "eh_alloc.h"
 
@@ -169,13 +170,13 @@ void eh_log_stderr_timestamp(int enabled)
 }
 
 ssize_t eh_log_stderr(const char *name, enum eh_log_level level, int code,
-		   const char *UNUSED(dump), size_t UNUSED(dump_len),
+		   const char *dump, size_t dump_len,
 		   const char *str, ssize_t str_len)
 {
-	struct iovec v[6];
+	struct iovec v[9];
 	struct timeval tv;
 
-	char buf[50];
+	char buf[1024]; /* arbitrary */
 	char *p = buf;
 	int l=0, l2, pl=sizeof(buf);
 
@@ -222,6 +223,21 @@ ssize_t eh_log_stderr(const char *name, enum eh_log_level level, int code,
 	if (str_len < 0)
 		str_len = strlen(str);
 	v[l++] = (struct iovec) { (void*)str, (size_t)str_len };
+
+	/* optional data dump */
+	if (dump) {
+		v[l++] = (struct iovec) { ": \"", 3 };
+
+		l2 = eh_fmt_cstr(p, pl, dump, dump_len);
+		v[l++] = (struct iovec) { p, l2 };
+		p += l2;
+		pl -= l2;
+
+		l2 = snprintf(p, pl, "\" (%zu)", dump_len);
+		v[l++] = (struct iovec) { p, l2 };
+		p += l2;
+		pl -= l2;
+	}
 
 	/* "\n" */
 	v[l++] = (struct iovec) { "\n", 1 };
