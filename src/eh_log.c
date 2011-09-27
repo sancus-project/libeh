@@ -67,6 +67,16 @@ void eh_log_finish(void)
 	}
 }
 
+/* preallocated loggers */
+void eh_logger_init(struct eh_logger *new, const char *name)
+{
+	new->name = name;
+	new->level = eh_log_default_level;
+
+	/* don't place them on the list until eh_logger_del learns to distinguish */
+	eh_list_init(&new->loggers);
+}
+
 /*
  * loggers allocation
  */
@@ -75,6 +85,7 @@ struct eh_logger *eh_logger_new(const char *name)
 	size_t l = strlen(name)+1;
 	struct eh_logger *new = eh_alloc(sizeof(struct eh_logger) + l);
 	if (new) {
+		new->name = (char *)new + sizeof(struct eh_logger);
 		memcpy((char *)new->name, name, l);
 
 		new->level = eh_log_default_level;

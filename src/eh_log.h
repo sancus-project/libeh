@@ -45,7 +45,7 @@ struct eh_logger {
 	struct eh_list loggers;
 
 	enum eh_log_level level;
-	const char name[];
+	const char *name;
 };
 
 /*
@@ -59,6 +59,8 @@ void eh_log_set_default_level(enum eh_log_level level);
 /*
  * logger
  */
+void eh_logger_init(struct eh_logger *logger, const char *name);
+
 struct eh_logger *eh_logger_new(const char *name);
 struct eh_logger *eh_logger_newf(const char *fmt, ...) TYPECHECK_PRINTF(1, 2);
 
