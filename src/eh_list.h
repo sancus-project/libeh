@@ -77,4 +77,8 @@ static inline void __eh_list_del(struct eh_list *prev, struct eh_list *next)
 #define eh_list_foreach(H, I) for(struct eh_list *I = (H)->next; (I) != (H); (I) = (I)->next)
 #define eh_list_foreach2(H, I, N) for(struct eh_list *I = (H)->next, *N = (I)->next; (I) != (H); (I) = (N), (N) = (I)->next)
 
+#define eh_list_isempty(H)	((H)->next == (H))
+#define eh_list_next(H, I)	((I)->next == (H) ? NULL : (I)->next)
+#define eh_list_first(H)	eh_list_next(H, H)
+
 #endif /* !_EH_LIST_H */
