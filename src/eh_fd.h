@@ -88,6 +88,27 @@ try_close:
 	return ret;
 }
 
+static inline ssize_t eh_write(int fd, const char *data, size_t size)
+{
+	int wc, wt = 0;
+
+	while (size) {
+try_write:
+		wc = write(fd, data, size);
+		if (unlikely(wc < 0)) {
+			if (errno == EINTR)
+				goto try_write;
+			return wc;
+		}
+
+		wt += wc;
+		size -= wc;
+		data += wc;
+	}
+
+	return wt;
+}
+
 #ifdef _SYS_UIO_H
 static inline ssize_t eh_writev(int fd, struct iovec *iov, int iovcnt)
 {
